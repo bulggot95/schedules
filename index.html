@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>나의 하루 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222635;
+    --border: #2e3248;
+    --accent: #4f8cff;
+    --accent2: #a78bfa;
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --text: #f0f2ff;
+    --text2: #8b90b0;
+    --text3: #5a5f7a;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-top: 8px;
+  }
+  .header-date .day {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .header-date .full-date {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .header-date .full-date span {
+    color: var(--accent);
+  }
+  .time-display {
+    text-align: right;
+  }
+  .time-display .time {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .time-display .ampm {
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 600;
+  }
+
+  /* WEEK BAR */
+  .week-bar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 12px 10px;
+    border: 1px solid var(--border);
+  }
+  .week-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 6px 2px;
+    transition: background 0.15s;
+  }
+  .week-day:hover { background: var(--surface2); }
+  .week-day .wd-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+  .week-day .wd-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text2);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.15s;
+  }
+  .week-day.today .wd-label { color: var(--accent); }
+  .week-day.today .wd-num {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+  }
+  .week-day .wd-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .week-day.has-event .wd-dot { background: var(--accent2); }
+  .week-day.selected .wd-num {
+    border: 2px solid var(--accent);
+    color: var(--text);
+    background: transparent;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-title .count-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--surface2);
+    color: var(--text2);
+    border-radius: 20px;
+    padding: 2px 8px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* SCHEDULE SECTION */
+  .schedule-section { margin-bottom: 20px; }
+
+  .schedule-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .schedule-item {
+    display: flex;
+    align-items: stretch;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.1s, box-shadow 0.1s;
+    cursor: pointer;
+    position: relative;
+  }
+  .schedule-item:active { transform: scale(0.98); }
+  .schedule-item .color-bar {
+    width: 4px;
+    flex-shrink: 0;
+    background: var(--accent);
+  }
+  .schedule-item .item-body {
+    padding: 12px 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  .schedule-item .item-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+  .schedule-item .item-meta {
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .schedule-item .item-meta .dot { color: var(--text3); }
+  .schedule-item .item-time {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .schedule-item .time-start {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .schedule-item .time-end {
+    font-size: 11px;
+    color: var(--text3);
+    font-weight: 500;
+  }
+  .schedule-item.allday .item-time .time-start {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 2px 6px;
+  }
+  .schedule-item.ongoing .color-bar { background: var(--green); }
+  .schedule-item.ongoing .item-title { color: var(--green); }
+
+  .now-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+  }
+  .now-line .now-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(248,113,113,0.25);
+  }
+  .now-line .now-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.05em;
+  }
+  .now-line .now-bar {
+    flex: 1;
+    height: 1px;
+    background: var(--red);
+    opacity: 0.3;
+  }
+
+  .add-btn {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text3);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .add-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(79,140,255,0.06); }
+
+  /* TODO SECTION */
+  .todo-section { margin-bottom: 20px; }
+
+  .todo-filters {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .todo-filter {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .todo-filter.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .todo-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .todo-item:active { transform: scale(0.98); }
+  .todo-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: transparent;
+  }
+  .todo-item.done .todo-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .todo-check svg { display: none; }
+  .todo-item.done .todo-check svg { display: block; }
+
+  .todo-content { flex: 1; min-width: 0; }
+  .todo-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.2s;
+  }
+  .todo-item.done .todo-title {
+    color: var(--text3);
+    text-decoration: line-through;
+  }
+  .todo-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  .priority-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .p-high { background: var(--red); }
+  .p-mid  { background: var(--yellow); }
+  .p-low  { background: var(--text3); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 36px;
+    width: 100%;
+    max-width: 480px;
+    border-top: 1px solid var(--border);
+    animation: slideUp 0.25s cubic-bezier(.22,.61,.36,1);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 14px;
+    font-family: inherit;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-select {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 14px;
+    font-family: inherit;
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-cancel {
+    flex: 1;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-submit {
+    flex: 2;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-submit:active { transform: scale(0.97); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 24px 0 16px;
+    color: var(--text3);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* DETAIL MODAL */
+  .detail-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .btn-delete {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(248,113,113,0.12);
+    border: 1px solid rgba(248,113,113,0.3);
+    color: var(--red);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .detail-row:last-of-type { border-bottom: none; }
+  .detail-row .dr-label { color: var(--text3); font-weight: 600; }
+  .detail-row .dr-val  { color: var(--text);  font-weight: 600; }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-date">
+    <div class="day" id="dayLabel">토요일</div>
+    <div class="full-date" id="fullDate">5월 <span id="dateNum">2</span>일</div>
+  </div>
+  <div class="time-display">
+    <div class="time" id="clockTime">12:00</div>
+    <div class="ampm" id="clockAmpm">PM</div>
+  </div>
+</div>
+
+<!-- WEEK BAR -->
+<div class="week-bar" id="weekBar"></div>
+
+<!-- SCHEDULE SECTION -->
+<div class="schedule-section">
+  <div class="section-title">
+    오늘 일정
+    <span class="count-badge" id="schedCount">0</span>
+  </div>
+  <div class="schedule-list" id="scheduleList"></div>
+  <button class="add-btn" onclick="openSchedModal()">＋ 일정 추가</button>
+</div>
+
+<!-- TODO SECTION -->
+<div class="todo-section">
+  <div class="section-title">
+    할 일
+    <span class="count-badge" id="todoCount">0</span>
+  </div>
+  <div class="todo-filters">
+    <button class="todo-filter active" onclick="setFilter('all', this)">전체</button>
+    <button class="todo-filter" onclick="setFilter('today', this)">오늘</button>
+    <button class="todo-filter" onclick="setFilter('done', this)">완료</button>
+  </div>
+  <div class="todo-list" id="todoList"></div>
+  <button class="add-btn" onclick="openTodoModal()">＋ 할 일 추가</button>
+</div>
+
+<!-- SCHEDULE MODAL -->
+<div class="modal-overlay" id="schedModal" onclick="closeModal('schedModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">일정 추가</div>
+    <div class="form-group">
+      <label class="form-label">제목</label>
+      <input class="form-input" id="schedTitle" placeholder="일정 제목 입력" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">날짜</label>
+      <input class="form-input" type="date" id="schedDate" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">시작</label>
+        <input class="form-input" type="time" id="schedStart" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">종료</label>
+        <input class="form-input" type="time" id="schedEnd" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">메모</label>
+      <input class="form-input" id="schedMemo" placeholder="선택사항" />
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal('schedModal')">취소</button>
+      <button class="btn-submit" onclick="addSchedule()">추가하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- TODO MODAL -->
+<div class="modal-overlay" id="todoModal" onclick="closeModal('todoModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">할 일 추가</div>
+    <div class="form-group">
+      <label class="form-label">내용</label>
+      <input class="form-input" id="todoTitle" placeholder="할 일 입력" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">날짜</label>
+        <input class="form-input" type="date" id="todoDate" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">우선순위</label>
+        <select class="form-select" id="todoPriority">
+          <option value="high">🔴 높음</option>
+          <option value="mid" selected>🟡 보통</option>
+          <option value="low">⚫ 낮음</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal('todoModal')">취소</button>
+      <button class="btn-submit" onclick="addTodo()">추가하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="closeModal('detailModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="detailTitle"></div>
+    <div id="detailBody"></div>
+    <div class="detail-actions">
+      <button class="btn-delete" id="detailDeleteBtn">삭제</button>
+      <button class="btn-submit" style="flex:2" onclick="closeModal('detailModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────
+let schedules = JSON.parse(localStorage.getItem('dash_schedules') || '[]');
+let todos     = JSON.parse(localStorage.getItem('dash_todos')     || '[]');
+let todoFilter = 'all';
+let selectedDate = todayStr();
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function save() {
+  localStorage.setItem('dash_schedules', JSON.stringify(schedules));
+  localStorage.setItem('dash_todos',     JSON.stringify(todos));
+}
+
+// ── CLOCK ─────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12  = h % 12 || 12;
+  document.getElementById('clockTime').textContent = `${String(h12).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  document.getElementById('clockAmpm').textContent = ampm;
+
+  const days = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+  document.getElementById('dayLabel').textContent = days[now.getDay()];
+  document.getElementById('fullDate').innerHTML = `${now.getMonth()+1}월 <span id="dateNum">${now.getDate()}</span>일`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── WEEK BAR ──────────────────────────────────────
+function renderWeek() {
+  const bar = document.getElementById('weekBar');
+  bar.innerHTML = '';
+  const today = new Date();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+  const wdLabels = ['일','월','화','수','목','금','토'];
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + i);
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const isToday = ds === todayStr();
+    const isSelected = ds === selectedDate;
+    const hasEvent = schedules.some(s => s.date === ds);
+
+    const el = document.createElement('div');
+    el.className = `week-day${isToday ? ' today' : ''}${isSelected && !isToday ? ' selected' : ''}${hasEvent ? ' has-event' : ''}`;
+    el.innerHTML = `
+      <span class="wd-label">${wdLabels[i]}</span>
+      <span class="wd-num">${d.getDate()}</span>
+      <span class="wd-dot"></span>`;
+    el.onclick = () => { selectedDate = ds; renderAll(); };
+    bar.appendChild(el);
+  }
+}
+
+// ── SCHEDULE ──────────────────────────────────────
+function renderSchedules() {
+  const list = document.getElementById('scheduleList');
+  const now = new Date();
+  const filtered = schedules
+    .filter(s => s.date === selectedDate)
+    .sort((a,b) => (a.start||'').localeCompare(b.start||''));
+
+  document.getElementById('schedCount').textContent = filtered.length;
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">등록된 일정이 없습니다</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  let nowInserted = false;
+
+  filtered.forEach(s => {
+    const isToday = s.date === todayStr();
+    if (isToday && !nowInserted && s.start) {
+      const [sh, sm] = s.start.split(':').map(Number);
+      const schedMins = sh * 60 + sm;
+      const nowMins   = now.getHours() * 60 + now.getMinutes();
+      if (nowMins < schedMins) {
+        const nl = document.createElement('div');
+        nl.className = 'now-line';
+        nl.innerHTML = `<span class="now-dot"></span><span class="now-label">지금</span><span class="now-bar"></span>`;
+        list.appendChild(nl);
+        nowInserted = true;
+      }
+    }
+
+    const isOngoing = isToday && s.start && s.end && (() => {
+      const [sh,sm] = s.start.split(':').map(Number);
+      const [eh,em] = s.end.split(':').map(Number);
+      const nm = now.getHours()*60+now.getMinutes();
+      return nm >= sh*60+sm && nm <= eh*60+em;
+    })();
+
+    const el = document.createElement('div');
+    el.className = `schedule-item${!s.start ? ' allday' : ''}${isOngoing ? ' ongoing' : ''}`;
+    el.innerHTML = `
+      <div class="color-bar"></div>
+      <div class="item-body">
+        <div class="item-title">${s.title}</div>
+        ${s.memo ? `<div class="item-meta">${s.memo}</div>` : ''}
+      </div>
+      <div class="item-time">
+        <span class="time-start">${s.start || '종일'}</span>
+        ${s.end ? `<span class="time-end">~ ${s.end}</span>` : ''}
+      </div>`;
+    el.onclick = () => openDetailModal('sched', s.id);
+    list.appendChild(el);
+  });
+}
+
+function openSchedModal() {
+  document.getElementById('schedTitle').value = '';
+  document.getElementById('schedDate').value  = selectedDate;
+  document.getElementById('schedStart').value = '';
+  document.getElementById('schedEnd').value   = '';
+  document.getElementById('schedMemo').value  = '';
+  document.getElementById('schedModal').classList.add('open');
+  setTimeout(() => document.getElementById('schedTitle').focus(), 300);
+}
+
+function addSchedule() {
+  const title = document.getElementById('schedTitle').value.trim();
+  if (!title) { document.getElementById('schedTitle').focus(); return; }
+  schedules.push({
+    id: Date.now(),
+    title,
+    date:  document.getElementById('schedDate').value || todayStr(),
+    start: document.getElementById('schedStart').value,
+    end:   document.getElementById('schedEnd').value,
+    memo:  document.getElementById('schedMemo').value.trim()
+  });
+  save(); closeModal('schedModal'); renderAll();
+}
+
+// ── TODO ──────────────────────────────────────────
+function renderTodos() {
+  const list = document.getElementById('todoList');
+  let filtered = [...todos];
+  if (todoFilter === 'today') filtered = filtered.filter(t => t.date === todayStr() || !t.date);
+  if (todoFilter === 'done')  filtered = filtered.filter(t => t.done);
+  if (todoFilter === 'all')   filtered = filtered.filter(t => !t.done).concat(filtered.filter(t=>t.done));
+
+  const pending = todos.filter(t=>!t.done).length;
+  document.getElementById('todoCount').textContent = `${pending}/${todos.length}`;
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">할 일이 없습니다 🎉</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  filtered.forEach(t => {
+    const el = document.createElement('div');
+    el.className = `todo-item${t.done ? ' done' : ''}`;
+    const pClass = t.priority === 'high' ? 'p-high' : t.priority === 'mid' ? 'p-mid' : 'p-low';
+    el.innerHTML = `
+      <div class="todo-check" onclick="toggleTodo(${t.id}, event)">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+          <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="todo-content">
+        <div class="todo-title">${t.title}</div>
+        ${t.date ? `<div class="todo-sub">${t.date.replace(/-/g,'.')} ${t.priority==='high'?'• 높은 우선순위':''}</div>` : ''}
+      </div>
+      <div class="priority-dot ${pClass}"></div>`;
+    el.onclick = (e) => { if (!e.target.closest('.todo-check')) openDetailModal('todo', t.id); };
+    list.appendChild(el);
+  });
+}
+
+function setFilter(f, btn) {
+  todoFilter = f;
+  document.querySelectorAll('.todo-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTodos();
+}
+
+function toggleTodo(id, e) {
+  e.stopPropagation();
+  const t = todos.find(t => t.id === id);
+  if (t) { t.done = !t.done; save(); renderTodos(); }
+}
+
+function openTodoModal() {
+  document.getElementById('todoTitle').value    = '';
+  document.getElementById('todoDate').value     = todayStr();
+  document.getElementById('todoPriority').value = 'mid';
+  document.getElementById('todoModal').classList.add('open');
+  setTimeout(() => document.getElementById('todoTitle').focus(), 300);
+}
+
+function addTodo() {
+  const title = document.getElementById('todoTitle').value.trim();
+  if (!title) { document.getElementById('todoTitle').focus(); return; }
+  todos.unshift({
+    id: Date.now(),
+    title,
+    date:     document.getElementById('todoDate').value,
+    priority: document.getElementById('todoPriority').value,
+    done: false
+  });
+  save(); closeModal('todoModal'); renderTodos();
+}
+
+// ── DETAIL MODAL ──────────────────────────────────
+function openDetailModal(type, id) {
+  let item, bodyHtml;
+  if (type === 'sched') {
+    item = schedules.find(s => s.id === id);
+    bodyHtml = `
+      <div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>
+      ${item.start ? `<div class="detail-row"><span class="dr-label">시간</span><span class="dr-val">${item.start}${item.end ? ' ~ '+item.end : ''}</span></div>` : ''}
+      ${item.memo  ? `<div class="detail-row"><span class="dr-label">메모</span><span class="dr-val">${item.memo}</span></div>` : ''}`;
+    document.getElementById('detailDeleteBtn').onclick = () => {
+      schedules = schedules.filter(s => s.id !== id);
+      save(); closeModal('detailModal'); renderAll();
+    };
+  } else {
+    item = todos.find(t => t.id === id);
+    const pLabel = item.priority==='high'?'🔴 높음':item.priority==='mid'?'🟡 보통':'⚫ 낮음';
+    bodyHtml = `
+      <div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>
+      <div class="detail-row"><span class="dr-label">우선순위</span><span class="dr-val">${pLabel}</span></div>
+      <div class="detail-row"><span class="dr-label">상태</span><span class="dr-val">${item.done ? '✅ 완료' : '⏳ 진행중'}</span></div>`;
+    document.getElementById('detailDeleteBtn').onclick = () => {
+      todos = todos.filter(t => t.id !== id);
+      save(); closeModal('detailModal'); renderTodos();
+    };
+  }
+  document.getElementById('detailTitle').textContent = item.title;
+  document.getElementById('detailBody').innerHTML = bodyHtml;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+// ── MODAL ─────────────────────────────────────────
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ── INIT ──────────────────────────────────────────
+function renderAll() {
+  renderWeek();
+  renderSchedules();
+  renderTodos();
+}
+renderAll();
+setInterval(renderSchedules, 60000); // refresh every minute for now-line
+</script>
+</body>
+</html>
