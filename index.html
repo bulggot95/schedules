@@ -131,6 +131,7 @@
   <div class="sync-dot" id="syncDot"></div>
   <span id="syncLabel">연결 중...</span>
   <button class="sync-btn" onclick="syncAll()">↻ 새로고침</button>
+  <button class="sync-btn" onclick="openCatModal()" style="margin-left:6px">⚙ 분류</button>
 </div>
 
 <div class="week-bar" id="weekBar"></div>
@@ -159,6 +160,9 @@
     <div class="modal-title">일정 추가</div>
     <div class="form-group"><label class="form-label">제목</label><input class="form-input" id="schedTitle" placeholder="일정 제목 입력"/></div>
     <div class="form-group"><label class="form-label">날짜</label><input class="form-input" type="date" id="schedDate"/></div>
+    <div class="form-group"><label class="form-label">분류</label>
+      <select class="form-select" id="schedCategory"></select>
+    </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">시작</label>
         <div style="display:flex;gap:6px">
@@ -217,10 +221,49 @@
   </div>
 </div>
 
+<!-- CATEGORY MODAL -->
+<div class="modal-overlay" id="catModal" onclick="closeModal('catModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">분류 관리</div>
+    <div id="catList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input class="form-input" id="newCatName" placeholder="분류 이름" style="flex:1"/>
+      <input type="color" id="newCatColor" value="#a8d8ea" style="width:44px;height:44px;border:none;border-radius:10px;cursor:pointer;background:none;padding:0"/>
+      <button class="btn-submit" style="flex:0 0 auto;padding:12px 16px" onclick="addCategory()">추가</button>
+    </div>
+    <div class="form-actions" style="margin-top:16px">
+      <button class="btn-submit" onclick="closeModal('catModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbymodE8bCD_LpfdWq6GsgtbxjHGBEUoJu0dRSDMSqaVmFF5rvIm6PX04tZklDzcRZWl/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwOWL16NSNTcROgO5xKHMsIR3Zq2sfCIcFtYuixAOVJ_piiqclx4BgumEez1NdQQlWD/exec';
 
 let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr();
+let categories = [];
+function getCat(id){return categories.find(c=>c.id===id)||null;}
+async function loadCats(){
+  const rows = await gasGet('categories');
+  const data = rows.filter(r=>r[0]&&r[0]!=='id');
+  if(data.length===0){
+    // 기본 분류 초기화
+    categories=[
+      {id:'cat_1',name:'회의',color:'#b5d5f5'},
+      {id:'cat_2',name:'약속',color:'#f5c6d0'},
+      {id:'cat_3',name:'작업',color:'#b5e5c8'},
+      {id:'cat_4',name:'개인',color:'#fde9b5'},
+    ];
+    await saveAllCats();
+  } else {
+    categories = data.map(r=>({id:r[0]||'',name:r[1]||'',color:r[2]||'#cccccc'}));
+  }
+}
+async function saveAllCats(){
+  const rows=[['id','name','color'],...categories.map(c=>[c.id,c.name,c.color])];
+  await gasPost({sheet:'categories',action:'overwrite',rows});
+}
 
 function todayStr() {
   const d = new Date();
@@ -269,7 +312,7 @@ async function gasPost(body) {
 async function loadSchedules() {
   const rows = await gasGet('schedules');
   schedules = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||''
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||''
   }));
 }
 
@@ -280,10 +323,39 @@ async function loadTodos() {
   }));
 }
 
+function openCatModal(){
+  renderCatList();
+  document.getElementById('newCatName').value='';
+  document.getElementById('catModal').classList.add('open');
+}
+function renderCatList(){
+  const list=document.getElementById('catList');
+  list.innerHTML=categories.map(c=>`
+    <div style="display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:10px;padding:10px 14px;border:1px solid var(--border)">
+      <div style="width:20px;height:20px;border-radius:50%;background:${c.color};flex-shrink:0"></div>
+      <span style="flex:1;font-size:14px;font-weight:600;color:var(--text)">${c.name}</span>
+      <button onclick="deleteCat('${c.id}')" style="background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;line-height:1">×</button>
+    </div>`).join('');
+}
+async function addCategory(){
+  const name=document.getElementById('newCatName').value.trim();
+  if(!name)return;
+  const color=document.getElementById('newCatColor').value;
+  const item={id:'cat_'+Date.now(),name,color};
+  categories.push(item);
+  renderCatList();
+  document.getElementById('newCatName').value='';
+  await saveAllCats();
+}
+async function deleteCat(id){
+  categories=categories.filter(c=>c.id!==id);
+  renderCatList();
+  await saveAllCats();
+}
 async function syncAll() {
   setSyncStatus('syncing','동기화 중...');
   try {
-    await Promise.all([loadSchedules(), loadTodos()]);
+    await Promise.all([loadSchedules(), loadTodos(), loadCats()]);
     renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) {
@@ -292,7 +364,7 @@ async function syncAll() {
 }
 
 async function saveAllSchedules() {
-  const rows = [['id','title','date','start','end','memo'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo])];
+  const rows = [['id','title','date','start','end','memo','category'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||''])];
   await gasPost({ sheet:'schedules', action:'overwrite', rows });
 }
 
@@ -351,7 +423,8 @@ function renderSchedules() {
     })();
     const el=document.createElement('div');
     el.className=`schedule-item${!s.start?' allday':''}${isOngoing?' ongoing':''}`;
-    el.innerHTML=`<div class="color-bar"></div><div class="item-body"><div class="item-title">${s.title}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;
+    const cat=getCat(s.category);const barColor=cat?cat.color:'var(--accent)';const catBadge=cat?`<span style="font-size:10px;font-weight:700;color:${cat.color};background:${cat.color}22;border-radius:4px;padding:1px 6px;margin-left:4px">${cat.name}</span>`:'';
+    el.innerHTML=`<div class="color-bar" style="background:${barColor}"></div><div class="item-body"><div class="item-title">${s.title}${catBadge}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;
     el.onclick=()=>openDetailModal('sched',s.id);
     list.appendChild(el);
   });
@@ -372,6 +445,8 @@ function openSchedModal() {
   populateHours();
   setTime('schedStartH','schedStartM','');
   setTime('schedEndH','schedEndM','');
+  const csel=document.getElementById('schedCategory');
+  csel.innerHTML='<option value="">-- 분류 없음</option>'+categories.map(c=>`<option value="${c.id}" style="background:${c.color}">${c.name}</option>`).join('');
   const btn=document.getElementById('schedSubmitBtn'); btn.disabled=false; btn.textContent='추가하기';
   document.getElementById('schedModal').classList.add('open');
   setTimeout(()=>document.getElementById('schedTitle').focus(),300);
@@ -381,9 +456,9 @@ async function addSchedule() {
   const title=document.getElementById('schedTitle').value.trim();
   if(!title){document.getElementById('schedTitle').focus();return;}
   const btn=document.getElementById('schedSubmitBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
-  const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:getTime('schedStartH','schedStartM'),end:getTime('schedEndH','schedEndM'),memo:document.getElementById('schedMemo').value.trim()};
+  const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:getTime('schedStartH','schedStartM'),end:getTime('schedEndH','schedEndM'),category:document.getElementById('schedCategory').value,memo:document.getElementById('schedMemo').value.trim()};
   try {
-    await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo]});
+    await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'']});
     schedules.push(item); closeModal('schedModal'); renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
