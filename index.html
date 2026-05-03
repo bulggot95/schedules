@@ -261,9 +261,10 @@ function getCat(id){return categories.find(c=>c.id===id)||null;}
 
 // ── 캐시 ──────────────────────────────────────────
 const CACHE_KEY = 'dash_cache';
+const CACHE_VER = 'v3';
 function saveCache(){
   localStorage.setItem(CACHE_KEY, JSON.stringify({
-    schedules, todos, categories, ts: Date.now()
+    schedules, todos, categories, ts: Date.now(), ver: CACHE_VER
   }));
 }
 function loadCache(){
@@ -271,6 +272,17 @@ function loadCache(){
     const s = localStorage.getItem(CACHE_KEY);
     if(!s) return false;
     const c = JSON.parse(s);
+    // 버전 다르면 캐시 무효화
+    if(c.ver !== CACHE_VER) {
+      localStorage.removeItem(CACHE_KEY);
+      return false;
+    }
+    // 날짜 형식 검증 (T가 포함된 ISO 형식이면 무효화)
+    const hasOldFormat = (c.schedules||[]).some(s => s.date && s.date.includes('T'));
+    if(hasOldFormat) {
+      localStorage.removeItem(CACHE_KEY);
+      return false;
+    }
     schedules  = c.schedules  || [];
     todos      = c.todos      || [];
     categories = c.categories || [];
