@@ -160,8 +160,18 @@
     <div class="form-group"><label class="form-label">제목</label><input class="form-input" id="schedTitle" placeholder="일정 제목 입력"/></div>
     <div class="form-group"><label class="form-label">날짜</label><input class="form-input" type="date" id="schedDate"/></div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">시작</label><input class="form-input" type="time" id="schedStart"/></div>
-      <div class="form-group"><label class="form-label">종료</label><input class="form-input" type="time" id="schedEnd"/></div>
+      <div class="form-group"><label class="form-label">시작</label>
+        <div style="display:flex;gap:6px">
+          <select class="form-select" id="schedStartH" style="flex:1"><option value="">--</option></select>
+          <select class="form-select" id="schedStartM" style="flex:0 0 80px"><option value="00">00분</option><option value="30">30분</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">종료</label>
+        <div style="display:flex;gap:6px">
+          <select class="form-select" id="schedEndH" style="flex:1"><option value="">--</option></select>
+          <select class="form-select" id="schedEndM" style="flex:0 0 80px"><option value="00">00분</option><option value="30">30분</option></select>
+        </div>
+      </div>
     </div>
     <div class="form-group"><label class="form-label">메모</label><input class="form-input" id="schedMemo" placeholder="선택사항"/></div>
     <div class="form-actions">
@@ -347,11 +357,21 @@ function renderSchedules() {
   });
 }
 
+function populateHours() {
+  ['schedStartH','schedEndH'].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='<option value="">--시</option>';
+    for(let h=0;h<24;h++){const v=pad(h);sel.innerHTML+=`<option value="${v}">${v}시</option>`;}
+  });
+}
+function getTime(hId,mId){const h=document.getElementById(hId).value,m=document.getElementById(mId).value;return h?`${h}:${m}`:''}
+function setTime(hId,mId,val){if(!val){document.getElementById(hId).value='';document.getElementById(mId).value='00';return;}const[h,m]=val.split(':');document.getElementById(hId).value=h;document.getElementById(mId).value=m>=30?'30':'00';}
 function openSchedModal() {
   ['schedTitle','schedMemo'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('schedDate').value=selectedDate;
-  document.getElementById('schedStart').value='';
-  document.getElementById('schedEnd').value='';
+  populateHours();
+  setTime('schedStartH','schedStartM','');
+  setTime('schedEndH','schedEndM','');
   const btn=document.getElementById('schedSubmitBtn'); btn.disabled=false; btn.textContent='추가하기';
   document.getElementById('schedModal').classList.add('open');
   setTimeout(()=>document.getElementById('schedTitle').focus(),300);
@@ -361,7 +381,7 @@ async function addSchedule() {
   const title=document.getElementById('schedTitle').value.trim();
   if(!title){document.getElementById('schedTitle').focus();return;}
   const btn=document.getElementById('schedSubmitBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
-  const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:document.getElementById('schedStart').value,end:document.getElementById('schedEnd').value,memo:document.getElementById('schedMemo').value.trim()};
+  const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:getTime('schedStartH','schedStartM'),end:getTime('schedEndH','schedEndM'),memo:document.getElementById('schedMemo').value.trim()};
   try {
     await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo]});
     schedules.push(item); closeModal('schedModal'); renderAll();
