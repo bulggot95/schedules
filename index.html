@@ -14,6 +14,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; max-width: 480px; margin: 0 auto; }
+
   .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-top: 8px; }
   .header-date .day { font-size: 13px; color: var(--text2); font-weight: 500; }
   .header-date .full-date { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.1; margin-top: 2px; }
@@ -21,6 +22,7 @@
   .time-display { text-align: right; }
   .time-display .time { font-size: 28px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
   .time-display .ampm { font-size: 12px; color: var(--text2); font-weight: 600; }
+
   .sync-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; font-size: 11px; font-weight: 600; color: var(--text3); }
   .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); transition: background 0.3s; }
   .sync-dot.syncing { background: var(--yellow); animation: pulse 1s infinite; }
@@ -28,6 +30,7 @@
   .sync-dot.error { background: var(--red); }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   .sync-btn { margin-left: auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; color: var(--text2); font-size: 11px; font-weight: 700; padding: 3px 10px; cursor: pointer; font-family: inherit; }
+
   .week-bar { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; background: var(--surface); border-radius: var(--radius); padding: 12px 10px; border: 1px solid var(--border); }
   .week-day { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; border-radius: 10px; padding: 6px 2px; }
   .week-day .wd-label { font-size: 10px; font-weight: 600; color: var(--text3); }
@@ -37,8 +40,10 @@
   .week-day .wd-dot { width: 4px; height: 4px; border-radius: 50%; background: transparent; }
   .week-day.has-event .wd-dot { background: var(--accent2); }
   .week-day.selected .wd-num { border: 2px solid var(--accent); color: var(--text); background: transparent; }
+
   .section-title { font-size: 12px; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
   .count-badge { font-size: 11px; font-weight: 700; background: var(--surface2); color: var(--text2); border-radius: 20px; padding: 2px 8px; letter-spacing: 0; text-transform: none; }
+
   .schedule-section { margin-bottom: 20px; }
   .schedule-list { display: flex; flex-direction: column; gap: 8px; }
   .schedule-item { display: flex; align-items: stretch; background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: transform 0.1s; }
@@ -57,6 +62,7 @@
   .now-line .now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex-shrink: 0; box-shadow: 0 0 0 3px rgba(248,113,113,0.25); }
   .now-line .now-label { font-size: 11px; font-weight: 700; color: var(--red); }
   .now-line .now-bar { flex: 1; height: 1px; background: var(--red); opacity: 0.3; }
+
   .todo-section { margin-bottom: 20px; }
   .todo-filters { display: flex; gap: 6px; margin-bottom: 10px; }
   .todo-filter { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; transition: all 0.15s; }
@@ -74,8 +80,10 @@
   .todo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
   .priority-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .p-high { background: var(--red); } .p-mid { background: var(--yellow); } .p-low { background: var(--text3); }
+
   .add-btn { width: 100%; background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-sm); color: var(--text3); font-size: 13px; font-weight: 600; padding: 12px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; transition: all 0.15s; }
   .add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 20px 36px; width: 100%; max-width: 480px; border-top: 1px solid var(--border); animation: slideUp 0.25s cubic-bezier(.22,.61,.36,1); }
@@ -92,12 +100,14 @@
   .btn-cancel { flex: 1; padding: 14px; border-radius: var(--radius-sm); background: var(--surface2); border: 1px solid var(--border); color: var(--text2); font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .btn-submit { flex: 2; padding: 14px; border-radius: var(--radius-sm); background: var(--accent); border: none; color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
   .detail-actions { display: flex; gap: 8px; margin-top: 16px; }
   .btn-delete { flex: 1; padding: 12px; border-radius: var(--radius-sm); background: rgba(248,113,113,0.12); border: 1px solid rgba(248,113,113,0.3); color: var(--red); font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .detail-row:last-of-type { border-bottom: none; }
   .detail-row .dr-label { color: var(--text3); font-weight: 600; }
   .detail-row .dr-val { color: var(--text); font-weight: 600; }
+
   .empty-state { text-align: center; padding: 24px 0 16px; color: var(--text3); font-size: 13px; }
   .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -105,6 +115,7 @@
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="header-date">
     <div class="day" id="dayLabel"></div>
@@ -115,17 +126,21 @@
     <div class="ampm" id="clockAmpm"></div>
   </div>
 </div>
+
 <div class="sync-bar">
   <div class="sync-dot" id="syncDot"></div>
   <span id="syncLabel">연결 중...</span>
   <button class="sync-btn" onclick="syncAll()">↻ 새로고침</button>
 </div>
+
 <div class="week-bar" id="weekBar"></div>
+
 <div class="schedule-section">
   <div class="section-title">오늘 일정<span class="count-badge" id="schedCount">0</span></div>
   <div class="schedule-list" id="scheduleList"></div>
   <button class="add-btn" onclick="openSchedModal()">＋ 일정 추가</button>
 </div>
+
 <div class="todo-section">
   <div class="section-title">할 일<span class="count-badge" id="todoCount">0</span></div>
   <div class="todo-filters">
@@ -136,6 +151,8 @@
   <div class="todo-list" id="todoList"></div>
   <button class="add-btn" onclick="openTodoModal()">＋ 할 일 추가</button>
 </div>
+
+<!-- SCHEDULE MODAL -->
 <div class="modal-overlay" id="schedModal" onclick="closeModal('schedModal')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -153,6 +170,8 @@
     </div>
   </div>
 </div>
+
+<!-- TODO MODAL -->
 <div class="modal-overlay" id="todoModal" onclick="closeModal('todoModal')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -174,6 +193,8 @@
     </div>
   </div>
 </div>
+
+<!-- DETAIL MODAL -->
 <div class="modal-overlay" id="detailModal" onclick="closeModal('detailModal')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -185,45 +206,251 @@
     </div>
   </div>
 </div>
+
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycby4Vu5y8pnEXouPBCvF0dwjHMmzv2D4tCKCPGFpOJlCIvPxhlOmw-ri0oKVOvWjUh8N/exec';
-let schedules=[],todos=[],todoFilter='all',selectedDate=todayStr();
-function todayStr(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
-function pad(n){return String(n).padStart(2,'0');}
-function timeNow(){const n=new Date();return `${pad(n.getHours())}:${pad(n.getMinutes())}`;}
-function setSyncStatus(state,msg){document.getElementById('syncDot').className='sync-dot '+state;document.getElementById('syncLabel').textContent=msg;}
-function gasGet(sheet){
-  return new Promise((resolve,reject)=>{
-    const cbName='cb_'+Date.now();
-    const script=document.createElement('script');
-    const timeout=setTimeout(()=>{delete window[cbName];if(document.body.contains(script))document.body.removeChild(script);reject(new Error('타임아웃'));},10000);
-    window[cbName]=(data)=>{clearTimeout(timeout);delete window[cbName];if(document.body.contains(script))document.body.removeChild(script);resolve(data);};
-    script.src=`${GAS_URL}?sheet=${sheet}&callback=${cbName}`;
-    script.onerror=()=>{clearTimeout(timeout);reject(new Error('GET 실패'));};
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbymodE8bCD_LpfdWq6GsgtbxjHGBEUoJu0dRSDMSqaVmFF5rvIm6PX04tZklDzcRZWl/exec';
+
+let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr();
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+function timeNow() { const n=new Date(); return `${pad(n.getHours())}:${pad(n.getMinutes())}`; }
+
+function setSyncStatus(state, msg) {
+  document.getElementById('syncDot').className = 'sync-dot ' + state;
+  document.getElementById('syncLabel').textContent = msg;
+}
+
+// ── GAS API ───────────────────────────────────────
+function gasGet(sheet) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      reject(new Error('타임아웃'));
+    }, 10000);
+    window[cbName] = (data) => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (document.body.contains(script)) document.body.removeChild(script);
+      resolve(data);
+    };
+    script.src = `${GAS_URL}?sheet=${sheet}&callback=${cbName}`;
+    script.onerror = () => { clearTimeout(timeout); reject(new Error('GET 실패')); };
     document.body.appendChild(script);
   });
 }
-async function gasPost(body){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(body)});return{ok:true};}
-async function loadSchedules(){const rows=await gasGet('schedules');schedules=rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({id:r[0]||'',title:r[1]||'',date:r[2]||'',start:r[3]||'',end:r[4]||'',memo:r[5]||''}));}
-async function loadTodos(){const rows=await gasGet('todos');todos=rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({id:r[0]||'',title:r[1]||'',date:r[2]||'',priority:r[3]||'mid',done:r[4]==='TRUE'}));}
-async function syncAll(){setSyncStatus('syncing','동기화 중...');try{await Promise.all([loadSchedules(),loadTodos()]);renderAll();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}catch(e){setSyncStatus('error','연결 실패 — 재시도하세요');}}
-async function saveAllSchedules(){const rows=[['id','title','date','start','end','memo'],...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo])];await gasPost({sheet:'schedules',action:'overwrite',rows});}
-async function saveAllTodos(){const rows=[['id','title','date','priority','done'],...todos.map(t=>[t.id,t.title,t.date,t.priority,t.done?'TRUE':'FALSE'])];await gasPost({sheet:'todos',action:'overwrite',rows});}
-function updateClock(){const now=new Date(),h=now.getHours(),m=now.getMinutes();document.getElementById('clockTime').textContent=`${pad(h%12||12)}:${pad(m)}`;document.getElementById('clockAmpm').textContent=h>=12?'PM':'AM';const days=['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];document.getElementById('dayLabel').textContent=days[now.getDay()];document.getElementById('fullDate').innerHTML=`${now.getMonth()+1}월 <span>${now.getDate()}</span>일`;}
-setInterval(updateClock,1000);updateClock();
-function renderWeek(){const bar=document.getElementById('weekBar');bar.innerHTML='';const today=new Date(),start=new Date(today);start.setDate(today.getDate()-today.getDay());['일','월','화','수','목','금','토'].forEach((lbl,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;const el=document.createElement('div');el.className=`week-day${ds===todayStr()?' today':''}${ds===selectedDate&&ds!==todayStr()?' selected':''}${schedules.some(s=>s.date===ds)?' has-event':''}`;el.innerHTML=`<span class="wd-label">${lbl}</span><span class="wd-num">${d.getDate()}</span><span class="wd-dot"></span>`;el.onclick=()=>{selectedDate=ds;renderAll();};bar.appendChild(el);});}
-function renderSchedules(){const list=document.getElementById('scheduleList'),now=new Date();const filtered=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>(a.start||'').localeCompare(b.start||''));document.getElementById('schedCount').textContent=filtered.length;if(!filtered.length){list.innerHTML='<div class="empty-state">등록된 일정이 없습니다</div>';return;}list.innerHTML='';let nowInserted=false;filtered.forEach(s=>{if(s.date===todayStr()&&!nowInserted&&s.start){const[sh,sm]=s.start.split(':').map(Number);if(now.getHours()*60+now.getMinutes()<sh*60+sm){const nl=document.createElement('div');nl.className='now-line';nl.innerHTML='<span class="now-dot"></span><span class="now-label">지금</span><span class="now-bar"></span>';list.appendChild(nl);nowInserted=true;}}const isOngoing=s.date===todayStr()&&s.start&&s.end&&(()=>{const[sh,sm]=s.start.split(':').map(Number),[eh,em]=s.end.split(':').map(Number),nm=now.getHours()*60+now.getMinutes();return nm>=sh*60+sm&&nm<=eh*60+em;})();const el=document.createElement('div');el.className=`schedule-item${!s.start?' allday':''}${isOngoing?' ongoing':''}`;el.innerHTML=`<div class="color-bar"></div><div class="item-body"><div class="item-title">${s.title}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;el.onclick=()=>openDetailModal('sched',s.id);list.appendChild(el);});}
-function openSchedModal(){['schedTitle','schedMemo'].forEach(id=>document.getElementById(id).value='');document.getElementById('schedDate').value=selectedDate;document.getElementById('schedStart').value='';document.getElementById('schedEnd').value='';const btn=document.getElementById('schedSubmitBtn');btn.disabled=false;btn.textContent='추가하기';document.getElementById('schedModal').classList.add('open');setTimeout(()=>document.getElementById('schedTitle').focus(),300);}
-async function addSchedule(){const title=document.getElementById('schedTitle').value.trim();if(!title){document.getElementById('schedTitle').focus();return;}const btn=document.getElementById('schedSubmitBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span>';const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:document.getElementById('schedStart').value,end:document.getElementById('schedEnd').value,memo:document.getElementById('schedMemo').value.trim()};try{await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo]});schedules.push(item);closeModal('schedModal');renderAll();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}catch(e){setSyncStatus('error','저장 실패');btn.disabled=false;btn.textContent='추가하기';}}
-function renderTodos(){const list=document.getElementById('todoList');let f=[...todos].sort((a,b)=>a.done-b.done);if(todoFilter==='today')f=f.filter(t=>t.date===todayStr()||!t.date);if(todoFilter==='done')f=f.filter(t=>t.done);document.getElementById('todoCount').textContent=`${todos.filter(t=>!t.done).length}/${todos.length}`;if(!f.length){list.innerHTML='<div class="empty-state">할 일이 없습니다 🎉</div>';return;}list.innerHTML='';f.forEach(t=>{const el=document.createElement('div');el.className=`todo-item${t.done?' done':''}`;const pc=t.priority==='high'?'p-high':t.priority==='mid'?'p-mid':'p-low';el.innerHTML=`<div class="todo-check" onclick="toggleTodo('${t.id}',event)"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="todo-content"><div class="todo-title">${t.title}</div>${t.date?`<div class="todo-sub">${t.date.replace(/-/g,'.')}</div>`:''}</div><div class="priority-dot ${pc}"></div>`;el.onclick=e=>{if(!e.target.closest('.todo-check'))openDetailModal('todo',t.id);};list.appendChild(el);});}
-function setFilter(f,btn){todoFilter=f;document.querySelectorAll('.todo-filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTodos();}
-async function toggleTodo(id,e){e.stopPropagation();const t=todos.find(t=>t.id===id);if(!t)return;t.done=!t.done;renderTodos();try{setSyncStatus('syncing','저장 중...');await saveAllTodos();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}catch(err){setSyncStatus('error','저장 실패');}}
-function openTodoModal(){document.getElementById('todoTitle').value='';document.getElementById('todoDate').value=todayStr();document.getElementById('todoPriority').value='mid';const btn=document.getElementById('todoSubmitBtn');btn.disabled=false;btn.textContent='추가하기';document.getElementById('todoModal').classList.add('open');setTimeout(()=>document.getElementById('todoTitle').focus(),300);}
-async function addTodo(){const title=document.getElementById('todoTitle').value.trim();if(!title){document.getElementById('todoTitle').focus();return;}const btn=document.getElementById('todoSubmitBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span>';const item={id:String(Date.now()),title,date:document.getElementById('todoDate').value,priority:document.getElementById('todoPriority').value,done:false};try{await gasPost({sheet:'todos',action:'append',row:[item.id,item.title,item.date,item.priority,'FALSE']});todos.unshift(item);closeModal('todoModal');renderTodos();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}catch(e){setSyncStatus('error','저장 실패');btn.disabled=false;btn.textContent='추가하기';}}
-function openDetailModal(type,id){let item,bodyHtml;if(type==='sched'){item=schedules.find(s=>s.id===id);bodyHtml=`<div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>${item.start?`<div class="detail-row"><span class="dr-label">시간</span><span class="dr-val">${item.start}${item.end?' ~ '+item.end:''}</span></div>`:''}${item.memo?`<div class="detail-row"><span class="dr-label">메모</span><span class="dr-val">${item.memo}</span></div>`:''}`;document.getElementById('detailDeleteBtn').onclick=async()=>{schedules=schedules.filter(s=>s.id!==id);closeModal('detailModal');renderAll();try{setSyncStatus('syncing','저장 중...');await saveAllSchedules();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}catch(e){setSyncStatus('error','저장 실패');}}}else{item=todos.find(t=>t.id===id);const pl=item.priority==='high'?'🔴 높음':item.priority==='mid'?'🟡 보통':'⚫ 낮음';bodyHtml=`<div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div><div class="detail-row"><span class="dr-label">우선순위</span><span class="dr-val">${pl}</span></div><div class="detail-row"><span class="dr-label">상태</span><span class="dr-val">${item.done?'✅ 완료':'⏳ 진행중'}</span></div>`;document.getElementById('detailDeleteBtn').onclick=async()=>{todos=todos.filter(t=>t.id!==id);closeModal('detailModal');renderTodos();try{setSyncStatus('syncing','저장 중...');await saveAllTodos();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}catch(e){setSyncStatus('error','저장 실패');}};}
-document.getElementById('detailTitle').textContent=item.title;document.getElementById('detailBody').innerHTML=bodyHtml;document.getElementById('detailModal').classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function renderAll(){renderWeek();renderSchedules();renderTodos();}
+
+async function gasPost(body) {
+  await fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify(body)
+  });
+  return { ok: true };
+}
+
+// ── LOAD & SYNC ───────────────────────────────────
+async function loadSchedules() {
+  const rows = await gasGet('schedules');
+  schedules = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||''
+  }));
+}
+
+async function loadTodos() {
+  const rows = await gasGet('todos');
+  todos = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'
+  }));
+}
+
+async function syncAll() {
+  setSyncStatus('syncing','동기화 중...');
+  try {
+    await Promise.all([loadSchedules(), loadTodos()]);
+    renderAll();
+    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
+  } catch(e) {
+    setSyncStatus('error','연결 실패 — 재시도하세요');
+  }
+}
+
+async function saveAllSchedules() {
+  const rows = [['id','title','date','start','end','memo'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo])];
+  await gasPost({ sheet:'schedules', action:'overwrite', rows });
+}
+
+async function saveAllTodos() {
+  const rows = [['id','title','date','priority','done'], ...todos.map(t=>[t.id,t.title,t.date,t.priority,t.done?'TRUE':'FALSE'])];
+  await gasPost({ sheet:'todos', action:'overwrite', rows });
+}
+
+// ── CLOCK ─────────────────────────────────────────
+function updateClock() {
+  const now = new Date(), h = now.getHours(), m = now.getMinutes();
+  document.getElementById('clockTime').textContent = `${pad(h%12||12)}:${pad(m)}`;
+  document.getElementById('clockAmpm').textContent = h>=12?'PM':'AM';
+  const days=['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+  document.getElementById('dayLabel').textContent = days[now.getDay()];
+  document.getElementById('fullDate').innerHTML = `${now.getMonth()+1}월 <span>${now.getDate()}</span>일`;
+}
+setInterval(updateClock,1000); updateClock();
+
+// ── WEEK BAR ──────────────────────────────────────
+function renderWeek() {
+  const bar = document.getElementById('weekBar');
+  bar.innerHTML = '';
+  const today = new Date(), start = new Date(today);
+  start.setDate(today.getDate()-today.getDay());
+  ['일','월','화','수','목','금','토'].forEach((lbl,i)=>{
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const el=document.createElement('div');
+    el.className=`week-day${ds===todayStr()?' today':''}${ds===selectedDate&&ds!==todayStr()?' selected':''}${schedules.some(s=>s.date===ds)?' has-event':''}`;
+    el.innerHTML=`<span class="wd-label">${lbl}</span><span class="wd-num">${d.getDate()}</span><span class="wd-dot"></span>`;
+    el.onclick=()=>{ selectedDate=ds; renderAll(); };
+    bar.appendChild(el);
+  });
+}
+
+// ── SCHEDULES ─────────────────────────────────────
+function renderSchedules() {
+  const list=document.getElementById('scheduleList'), now=new Date();
+  const filtered=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  document.getElementById('schedCount').textContent=filtered.length;
+  if(!filtered.length){list.innerHTML='<div class="empty-state">등록된 일정이 없습니다</div>';return;}
+  list.innerHTML=''; let nowInserted=false;
+  filtered.forEach(s=>{
+    if(s.date===todayStr()&&!nowInserted&&s.start){
+      const [sh,sm]=s.start.split(':').map(Number);
+      if(now.getHours()*60+now.getMinutes()<sh*60+sm){
+        const nl=document.createElement('div'); nl.className='now-line';
+        nl.innerHTML='<span class="now-dot"></span><span class="now-label">지금</span><span class="now-bar"></span>';
+        list.appendChild(nl); nowInserted=true;
+      }
+    }
+    const isOngoing=s.date===todayStr()&&s.start&&s.end&&(()=>{
+      const [sh,sm]=s.start.split(':').map(Number),[eh,em]=s.end.split(':').map(Number),nm=now.getHours()*60+now.getMinutes();
+      return nm>=sh*60+sm&&nm<=eh*60+em;
+    })();
+    const el=document.createElement('div');
+    el.className=`schedule-item${!s.start?' allday':''}${isOngoing?' ongoing':''}`;
+    el.innerHTML=`<div class="color-bar"></div><div class="item-body"><div class="item-title">${s.title}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;
+    el.onclick=()=>openDetailModal('sched',s.id);
+    list.appendChild(el);
+  });
+}
+
+function openSchedModal() {
+  ['schedTitle','schedMemo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('schedDate').value=selectedDate;
+  document.getElementById('schedStart').value='';
+  document.getElementById('schedEnd').value='';
+  const btn=document.getElementById('schedSubmitBtn'); btn.disabled=false; btn.textContent='추가하기';
+  document.getElementById('schedModal').classList.add('open');
+  setTimeout(()=>document.getElementById('schedTitle').focus(),300);
+}
+
+async function addSchedule() {
+  const title=document.getElementById('schedTitle').value.trim();
+  if(!title){document.getElementById('schedTitle').focus();return;}
+  const btn=document.getElementById('schedSubmitBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+  const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:document.getElementById('schedStart').value,end:document.getElementById('schedEnd').value,memo:document.getElementById('schedMemo').value.trim()};
+  try {
+    await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo]});
+    schedules.push(item); closeModal('schedModal'); renderAll();
+    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
+  } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
+}
+
+// ── TODOS ─────────────────────────────────────────
+function renderTodos() {
+  const list=document.getElementById('todoList');
+  let f=[...todos].sort((a,b)=>a.done-b.done);
+  if(todoFilter==='today') f=f.filter(t=>t.date===todayStr()||!t.date);
+  if(todoFilter==='done')  f=f.filter(t=>t.done);
+  document.getElementById('todoCount').textContent=`${todos.filter(t=>!t.done).length}/${todos.length}`;
+  if(!f.length){list.innerHTML='<div class="empty-state">할 일이 없습니다 🎉</div>';return;}
+  list.innerHTML='';
+  f.forEach(t=>{
+    const el=document.createElement('div'); el.className=`todo-item${t.done?' done':''}`;
+    const pc=t.priority==='high'?'p-high':t.priority==='mid'?'p-mid':'p-low';
+    el.innerHTML=`<div class="todo-check" onclick="toggleTodo('${t.id}',event)"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="todo-content"><div class="todo-title">${t.title}</div>${t.date?`<div class="todo-sub">${t.date.replace(/-/g,'.')}</div>`:''}</div><div class="priority-dot ${pc}"></div>`;
+    el.onclick=e=>{if(!e.target.closest('.todo-check'))openDetailModal('todo',t.id);};
+    list.appendChild(el);
+  });
+}
+
+function setFilter(f,btn) {
+  todoFilter=f;
+  document.querySelectorAll('.todo-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderTodos();
+}
+
+async function toggleTodo(id,e) {
+  e.stopPropagation();
+  const t=todos.find(t=>t.id===id); if(!t)return;
+  t.done=!t.done; renderTodos();
+  try { setSyncStatus('syncing','저장 중...'); await saveAllTodos(); setSyncStatus('ok',`마지막 동기화 ${timeNow()}`); }
+  catch(err) { setSyncStatus('error','저장 실패'); }
+}
+
+function openTodoModal() {
+  document.getElementById('todoTitle').value='';
+  document.getElementById('todoDate').value=todayStr();
+  document.getElementById('todoPriority').value='mid';
+  const btn=document.getElementById('todoSubmitBtn'); btn.disabled=false; btn.textContent='추가하기';
+  document.getElementById('todoModal').classList.add('open');
+  setTimeout(()=>document.getElementById('todoTitle').focus(),300);
+}
+
+async function addTodo() {
+  const title=document.getElementById('todoTitle').value.trim();
+  if(!title){document.getElementById('todoTitle').focus();return;}
+  const btn=document.getElementById('todoSubmitBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+  const item={id:String(Date.now()),title,date:document.getElementById('todoDate').value,priority:document.getElementById('todoPriority').value,done:false};
+  try {
+    await gasPost({sheet:'todos',action:'append',row:[item.id,item.title,item.date,item.priority,'FALSE']});
+    todos.unshift(item); closeModal('todoModal'); renderTodos();
+    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
+  } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
+}
+
+// ── DETAIL ────────────────────────────────────────
+function openDetailModal(type,id) {
+  let item,bodyHtml;
+  if(type==='sched') {
+    item=schedules.find(s=>s.id===id);
+    bodyHtml=`<div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>${item.start?`<div class="detail-row"><span class="dr-label">시간</span><span class="dr-val">${item.start}${item.end?' ~ '+item.end:''}</span></div>`:''}${item.memo?`<div class="detail-row"><span class="dr-label">메모</span><span class="dr-val">${item.memo}</span></div>`:''}`;
+    document.getElementById('detailDeleteBtn').onclick=async()=>{
+      schedules=schedules.filter(s=>s.id!==id); closeModal('detailModal'); renderAll();
+      try{setSyncStatus('syncing','저장 중...');await saveAllSchedules();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
+      catch(e){setSyncStatus('error','저장 실패');}
+    };
+  } else {
+    item=todos.find(t=>t.id===id);
+    const pl=item.priority==='high'?'🔴 높음':item.priority==='mid'?'🟡 보통':'⚫ 낮음';
+    bodyHtml=`<div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div><div class="detail-row"><span class="dr-label">우선순위</span><span class="dr-val">${pl}</span></div><div class="detail-row"><span class="dr-label">상태</span><span class="dr-val">${item.done?'✅ 완료':'⏳ 진행중'}</span></div>`;
+    document.getElementById('detailDeleteBtn').onclick=async()=>{
+      todos=todos.filter(t=>t.id!==id); closeModal('detailModal'); renderTodos();
+      try{setSyncStatus('syncing','저장 중...');await saveAllTodos();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
+      catch(e){setSyncStatus('error','저장 실패');}
+    };
+  }
+  document.getElementById('detailTitle').textContent=item.title;
+  document.getElementById('detailBody').innerHTML=bodyHtml;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function renderAll() { renderWeek(); renderSchedules(); renderTodos(); }
+
 syncAll();
 setInterval(renderSchedules,60000);
 </script>
