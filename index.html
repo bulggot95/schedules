@@ -239,16 +239,36 @@
 </div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwOWL16NSNTcROgO5xKHMsIR3Zq2sfCIcFtYuixAOVJ_piiqclx4BgumEez1NdQQlWD/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyLABXryezRANcwrpqYHefyB2QkKleVYsoz4QHRJS0kLgIH57-YXb8eXgvMoGYhIEqZ/exec';
 
 let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr();
 let categories = [];
 function getCat(id){return categories.find(c=>c.id===id)||null;}
-async function loadCats(){
-  const rows = await gasGet('categories');
-  const data = rows.filter(r=>r[0]&&r[0]!=='id');
-  if(data.length===0){
-    // 기본 분류 초기화
+
+// ── 캐시 ──────────────────────────────────────────
+const CACHE_KEY = 'dash_cache';
+function saveCache(){
+  localStorage.setItem(CACHE_KEY, JSON.stringify({
+    schedules, todos, categories, ts: Date.now()
+  }));
+}
+function loadCache(){
+  try {
+    const s = localStorage.getItem(CACHE_KEY);
+    if(!s) return false;
+    const c = JSON.parse(s);
+    schedules  = c.schedules  || [];
+    todos      = c.todos      || [];
+    categories = c.categories || [];
+    return true;
+  } catch(e){ return false; }
+}
+
+async function loadAll(){
+  const data = await gasGet('all');
+  // categories
+  const catRows = (data.categories||[]).filter(r=>r[0]&&r[0]!=='id');
+  if(catRows.length===0){
     categories=[
       {id:'cat_1',name:'회의',color:'#b5d5f5'},
       {id:'cat_2',name:'약속',color:'#f5c6d0'},
@@ -257,9 +277,18 @@ async function loadCats(){
     ];
     await saveAllCats();
   } else {
-    categories = data.map(r=>({id:r[0]||'',name:r[1]||'',color:r[2]||'#cccccc'}));
+    categories = catRows.map(r=>({id:r[0]||'',name:r[1]||'',color:r[2]||'#cccccc'}));
   }
+  // schedules
+  schedules = (data.schedules||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||''
+  }));
+  // todos
+  todos = (data.todos||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'
+  }));
 }
+
 async function saveAllCats(){
   const rows=[['id','name','color'],...categories.map(c=>[c.id,c.name,c.color])];
   await gasPost({sheet:'categories',action:'overwrite',rows});
@@ -309,19 +338,6 @@ async function gasPost(body) {
 }
 
 // ── LOAD & SYNC ───────────────────────────────────
-async function loadSchedules() {
-  const rows = await gasGet('schedules');
-  schedules = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||''
-  }));
-}
-
-async function loadTodos() {
-  const rows = await gasGet('todos');
-  todos = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'
-  }));
-}
 
 function openCatModal(){
   renderCatList();
@@ -353,9 +369,17 @@ async function deleteCat(id){
   await saveAllCats();
 }
 async function syncAll() {
-  setSyncStatus('syncing','동기화 중...');
+  // 캐시 즉시 표시
+  if(loadCache()) {
+    renderAll();
+    setSyncStatus('syncing','업데이트 중...');
+  } else {
+    setSyncStatus('syncing','동기화 중...');
+  }
+  // 백그라운드에서 실제 데이터 로드
   try {
-    await Promise.all([loadSchedules(), loadTodos(), loadCats()]);
+    await loadAll();
+    saveCache();
     renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) {
@@ -366,11 +390,13 @@ async function syncAll() {
 async function saveAllSchedules() {
   const rows = [['id','title','date','start','end','memo','category'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||''])];
   await gasPost({ sheet:'schedules', action:'overwrite', rows });
+  saveCache();
 }
 
 async function saveAllTodos() {
   const rows = [['id','title','date','priority','done'], ...todos.map(t=>[t.id,t.title,t.date,t.priority,t.done?'TRUE':'FALSE'])];
   await gasPost({ sheet:'todos', action:'overwrite', rows });
+  saveCache();
 }
 
 // ── CLOCK ─────────────────────────────────────────
@@ -459,7 +485,7 @@ async function addSchedule() {
   const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:getTime('schedStartH','schedStartM'),end:getTime('schedEndH','schedEndM'),category:document.getElementById('schedCategory').value,memo:document.getElementById('schedMemo').value.trim()};
   try {
     await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'']});
-    schedules.push(item); closeModal('schedModal'); renderAll();
+    schedules.push(item); saveCache(); closeModal('schedModal'); renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
 }
@@ -512,7 +538,7 @@ async function addTodo() {
   const item={id:String(Date.now()),title,date:document.getElementById('todoDate').value,priority:document.getElementById('todoPriority').value,done:false};
   try {
     await gasPost({sheet:'todos',action:'append',row:[item.id,item.title,item.date,item.priority,'FALSE']});
-    todos.unshift(item); closeModal('todoModal'); renderTodos();
+    todos.unshift(item); saveCache(); closeModal('todoModal'); renderTodos();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
 }
