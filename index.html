@@ -253,7 +253,7 @@
 </div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxntt6fbvUaO9MVgDMaTB-bgQxQ4AOm3P7lEXZDJ6kHOgw05kqe1iIHxkpW5zegA3wd/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzB9Yj0zKX8rZ0glWRuUN_QTPd4IoMMA6rzIaj0aPFssscaWbl61Yp6CG36t0pEQLUu/exec';
 
 let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr(), weekOffset = 0;
 let categories = [];
@@ -261,7 +261,7 @@ function getCat(id){return categories.find(c=>c.id===id)||null;}
 
 // ── 캐시 ──────────────────────────────────────────
 const CACHE_KEY = 'dash_cache';
-const CACHE_VER = 'v3';
+const CACHE_VER = 'v4';
 function saveCache(){
   localStorage.setItem(CACHE_KEY, JSON.stringify({
     schedules, todos, categories, ts: Date.now(), ver: CACHE_VER
@@ -311,7 +311,7 @@ async function loadAll(){
   }));
   // todos
   todos = (data.todos||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'||r[4]===true
   }));
 }
 
