@@ -31,7 +31,13 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   .sync-btn { margin-left: auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; color: var(--text2); font-size: 11px; font-weight: 700; padding: 3px 10px; cursor: pointer; font-family: inherit; }
 
-  .week-bar { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; background: var(--surface); border-radius: var(--radius); padding: 12px 10px; border: 1px solid var(--border); }
+  .week-wrapper { margin-bottom: 20px; }
+  .week-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .week-nav .week-label { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 0.05em; }
+  .week-nav .nav-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text2); font-size: 14px; font-weight: 700; padding: 4px 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .week-nav .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .week-nav .nav-btn.today-btn { font-size: 11px; padding: 4px 10px; }
+  .week-bar { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; background: var(--surface); border-radius: var(--radius); padding: 12px 10px; border: 1px solid var(--border); }
   .week-day { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; border-radius: 10px; padding: 6px 2px; }
   .week-day .wd-label { font-size: 10px; font-weight: 600; color: var(--text3); }
   .week-day .wd-num { font-size: 15px; font-weight: 700; color: var(--text2); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
@@ -134,7 +140,15 @@
   <button class="sync-btn" onclick="openCatModal()" style="margin-left:6px">⚙ 분류</button>
 </div>
 
-<div class="week-bar" id="weekBar"></div>
+<div class="week-wrapper">
+  <div class="week-nav">
+    <button class="nav-btn" onclick="moveWeek(-1)">‹ 이전</button>
+    <span class="week-label" id="weekLabel"></span>
+    <button class="nav-btn today-btn" onclick="goToday()">오늘</button>
+    <button class="nav-btn" onclick="moveWeek(1)">다음 ›</button>
+  </div>
+  <div class="week-bar" id="weekBar"></div>
+</div>
 
 <div class="schedule-section">
   <div class="section-title">오늘 일정<span class="count-badge" id="schedCount">0</span></div>
@@ -241,7 +255,7 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbyLABXryezRANcwrpqYHefyB2QkKleVYsoz4QHRJS0kLgIH57-YXb8eXgvMoGYhIEqZ/exec';
 
-let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr();
+let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr(), weekOffset = 0;
 let categories = [];
 function getCat(id){return categories.find(c=>c.id===id)||null;}
 
@@ -411,11 +425,35 @@ function updateClock() {
 setInterval(updateClock,1000); updateClock();
 
 // ── WEEK BAR ──────────────────────────────────────
+function moveWeek(dir) {
+  weekOffset += dir;
+  // 선택된 날짜도 같이 이동
+  const d = new Date(selectedDate);
+  d.setDate(d.getDate() + dir * 7);
+  selectedDate = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  renderAll();
+}
+function goToday() {
+  weekOffset = 0;
+  selectedDate = todayStr();
+  renderAll();
+}
 function renderWeek() {
   const bar = document.getElementById('weekBar');
   bar.innerHTML = '';
-  const today = new Date(), start = new Date(today);
-  start.setDate(today.getDate()-today.getDay());
+  const today = new Date();
+  const start = new Date(today);
+  start.setDate(today.getDate() - today.getDay() + weekOffset * 7);
+
+  // 주 레이블
+  const endOfWeek = new Date(start);
+  endOfWeek.setDate(start.getDate() + 6);
+  const lbl = weekOffset === 0 ? '이번 주'
+    : weekOffset === -1 ? '지난 주'
+    : weekOffset === 1 ? '다음 주'
+    : `${start.getMonth()+1}/${start.getDate()} ~ ${endOfWeek.getMonth()+1}/${endOfWeek.getDate()}`;
+  document.getElementById('weekLabel').textContent = lbl;
+
   ['일','월','화','수','목','금','토'].forEach((lbl,i)=>{
     const d=new Date(start); d.setDate(start.getDate()+i);
     const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
