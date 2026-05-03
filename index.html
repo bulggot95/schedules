@@ -339,7 +339,7 @@
 </div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzB9Yj0zKX8rZ0glWRuUN_QTPd4IoMMA6rzIaj0aPFssscaWbl61Yp6CG36t0pEQLUu/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzNIQeklJOCqIJamsyv7MzheXZU7a8cK5vft3wONZXQoUiuGkFBnBfbydhlmr0bpdaC/exec';
 
 let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr(), weekOffset = 0;
 let categories = [];
@@ -680,12 +680,11 @@ async function addSchedule() {
         id: String(Date.now()) + '_' + date,
         title, date, start, end, memo, category: cat, repeatId
       }));
-      // 배치로 저장
-      setSyncStatus('syncing', `반복 일정 ${dates.length}개 저장 중...`);
-      for(const item of newItems) {
-        await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'',item.repeatId||'']});
-        schedules.push(item);
-      }
+      // 한번에 배치 저장
+      setSyncStatus('syncing', `반복 일정 ${newItems.length}개 저장 중...`);
+      const batchRows = newItems.map(item=>[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'',item.repeatId||'']);
+      await gasPost({sheet:'schedules',action:'appendBatch',rows:batchRows});
+      newItems.forEach(item=>schedules.push(item));
     } else {
       const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start,end,category:cat,memo,repeatId:''};
       await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'','']});
