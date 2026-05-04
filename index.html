@@ -575,7 +575,8 @@ function renderWeek() {
 // ── SCHEDULES ─────────────────────────────────────
 function renderSchedules() {
   const list=document.getElementById('scheduleList'), now=new Date();
-  const filtered=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  const timeToMins = t => { if(!t) return 9999; const [h,m]=(t+':0').split(':').map(Number); return h*60+m; };
+  const filtered=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>timeToMins(a.start)-timeToMins(b.start));
   document.getElementById('schedCount').textContent=filtered.length;
   if(!filtered.length){list.innerHTML='<div class="empty-state">등록된 일정이 없습니다</div>';return;}
   list.innerHTML=''; let nowInserted=false;
