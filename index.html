@@ -17,7 +17,7 @@
 
   .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-top: 8px; }
   .header-date .day { font-size: 13px; color: var(--text2); font-weight: 500; }
-  .header-date .full-date { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.2; margin-top: 2px; white-space: nowrap; }
+  .header-date .full-date { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.1; margin-top: 2px; }
   .header-date .full-date span { color: var(--accent); }
   .time-display { text-align: right; }
   .time-display .time { font-size: 28px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
@@ -31,13 +31,7 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   .sync-btn { margin-left: auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; color: var(--text2); font-size: 11px; font-weight: 700; padding: 3px 10px; cursor: pointer; font-family: inherit; }
 
-  .week-wrapper { margin-bottom: 20px; }
-  .week-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .week-nav .week-label { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 0.05em; }
-  .week-nav .nav-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text2); font-size: 14px; font-weight: 700; padding: 4px 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-  .week-nav .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .week-nav .nav-btn.today-btn { font-size: 11px; padding: 4px 10px; }
-  .week-bar { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; background: var(--surface); border-radius: var(--radius); padding: 12px 10px; border: 1px solid var(--border); }
+  .week-bar { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; background: var(--surface); border-radius: var(--radius); padding: 12px 10px; border: 1px solid var(--border); }
   .week-day { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; border-radius: 10px; padding: 6px 2px; }
   .week-day .wd-label { font-size: 10px; font-weight: 600; color: var(--text3); }
   .week-day .wd-num { font-size: 15px; font-weight: 700; color: var(--text2); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
@@ -49,8 +43,6 @@
 
   .section-title { font-size: 12px; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
   .count-badge { font-size: 11px; font-weight: 700; background: var(--surface2); color: var(--text2); border-radius: 20px; padding: 2px 8px; letter-spacing: 0; text-transform: none; }
-  .title-add-btn { background: var(--accent); border: none; border-radius: 50%; color: #fff; font-size: 16px; font-weight: 700; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-family: inherit; line-height: 1; padding: 0; transition: all 0.15s; margin-left: auto; }
-  .title-add-btn:active { transform: scale(0.92); }
 
   .schedule-section { margin-bottom: 20px; }
   .schedule-list { display: flex; flex-direction: column; gap: 8px; }
@@ -87,10 +79,6 @@
   .todo-item.done .todo-title { color: var(--text3); text-decoration: line-through; }
   .todo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
   .priority-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .todo-item.dragging { opacity: 0.4; transform: scale(0.98); }
-  .todo-item.drag-over { border-color: var(--accent); background: rgba(79,140,255,0.08); }
-  .todo-item[draggable=true] { cursor: grab; }
-  .drag-handle { color: var(--text3); font-size: 16px; flex-shrink: 0; cursor: grab; padding: 0 4px; user-select: none; }
   .p-high { background: var(--red); } .p-mid { background: var(--yellow); } .p-low { background: var(--text3); }
 
   .add-btn { width: 100%; background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius-sm); color: var(--text3); font-size: 13px; font-weight: 600; padding: 12px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; transition: all 0.15s; }
@@ -122,9 +110,6 @@
 
   .empty-state { text-align: center; padding: 24px 0 16px; color: var(--text3); font-size: 13px; }
   .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
-  .day-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); background: transparent; color: var(--text2); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-  .day-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .repeat-badge { font-size: 10px; font-weight: 700; color: var(--accent2); background: rgba(167,139,250,0.15); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   ::-webkit-scrollbar { display: none; }
 </style>
@@ -146,32 +131,22 @@
   <div class="sync-dot" id="syncDot"></div>
   <span id="syncLabel">연결 중...</span>
   <button class="sync-btn" onclick="syncAll()">↻ 새로고침</button>
-  <button class="sync-btn" onclick="openCatModal()" style="margin-left:6px">⚙ 분류</button>
 </div>
 
-<div class="week-wrapper">
-  <div class="week-nav">
-    <button class="nav-btn" onclick="moveWeek(-1)">‹ 이전</button>
-    <span class="week-label" id="weekLabel"></span>
-    <button class="nav-btn today-btn" onclick="goToday()">오늘</button>
-    <button class="nav-btn" onclick="moveWeek(1)">다음 ›</button>
-  </div>
-  <div class="week-bar" id="weekBar"></div>
-</div>
+<div class="week-bar" id="weekBar"></div>
 
 <div class="schedule-section">
-  <div class="section-title">오늘 일정<span class="count-badge" id="schedCount">0</span><button class="title-add-btn" onclick="openSchedModal()">＋</button></div>
+  <div class="section-title">오늘 일정<span class="count-badge" id="schedCount">0</span></div>
   <div class="schedule-list" id="scheduleList"></div>
   <button class="add-btn" onclick="openSchedModal()">＋ 일정 추가</button>
 </div>
 
 <div class="todo-section">
-  <div class="section-title">할 일<span class="count-badge" id="todoCount">0</span><button class="title-add-btn" onclick="openTodoModal()">＋</button></div>
+  <div class="section-title">할 일<span class="count-badge" id="todoCount">0</span></div>
   <div class="todo-filters">
-    <button class="todo-filter active" onclick="setFilter('pending',this)">미완료</button>
+    <button class="todo-filter active" onclick="setFilter('all',this)">전체</button>
     <button class="todo-filter" onclick="setFilter('today',this)">오늘</button>
     <button class="todo-filter" onclick="setFilter('done',this)">완료</button>
-    <button class="todo-filter" onclick="setFilter('all',this)">전체</button>
   </div>
   <div class="todo-list" id="todoList"></div>
   <button class="add-btn" onclick="openTodoModal()">＋ 할 일 추가</button>
@@ -184,47 +159,11 @@
     <div class="modal-title">일정 추가</div>
     <div class="form-group"><label class="form-label">제목</label><input class="form-input" id="schedTitle" placeholder="일정 제목 입력"/></div>
     <div class="form-group"><label class="form-label">날짜</label><input class="form-input" type="date" id="schedDate"/></div>
-    <div class="form-group"><label class="form-label">분류</label>
-      <select class="form-select" id="schedCategory"></select>
-    </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">시작</label>
-        <div style="display:flex;gap:6px">
-          <select class="form-select" id="schedStartH" style="flex:1"><option value="">--</option></select>
-          <select class="form-select" id="schedStartM" style="flex:0 0 80px"><option value="00">00분</option><option value="30">30분</option></select>
-        </div>
-      </div>
-      <div class="form-group"><label class="form-label">종료</label>
-        <div style="display:flex;gap:6px">
-          <select class="form-select" id="schedEndH" style="flex:1"><option value="">--</option></select>
-          <select class="form-select" id="schedEndM" style="flex:0 0 80px"><option value="00">00분</option><option value="30">30분</option></select>
-        </div>
-      </div>
+      <div class="form-group"><label class="form-label">시작</label><input class="form-input" type="time" id="schedStart"/></div>
+      <div class="form-group"><label class="form-label">종료</label><input class="form-input" type="time" id="schedEnd"/></div>
     </div>
     <div class="form-group"><label class="form-label">메모</label><input class="form-input" id="schedMemo" placeholder="선택사항"/></div>
-    <div class="form-group">
-      <label class="form-label" style="display:flex;align-items:center;gap:10px">
-        반복 일정
-        <label style="position:relative;display:inline-block;width:36px;height:20px;margin:0">
-          <input type="checkbox" id="schedRepeat" style="opacity:0;width:0;height:0" onchange="toggleRepeatUI()">
-          <span id="repeatToggleSpan" style="position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:20px;transition:.3s"></span>
-        </label>
-      </label>
-      <div id="repeatUI" style="display:none;margin-top:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">반복 요일</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap" id="repeatDays">
-          <button type="button" class="day-btn" data-day="0">일</button>
-          <button type="button" class="day-btn" data-day="1">월</button>
-          <button type="button" class="day-btn" data-day="2">화</button>
-          <button type="button" class="day-btn" data-day="3">수</button>
-          <button type="button" class="day-btn" data-day="4">목</button>
-          <button type="button" class="day-btn" data-day="5">금</button>
-          <button type="button" class="day-btn" data-day="6">토</button>
-        </div>
-        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:12px;margin-bottom:6px">반복 시작일</div>
-        <input class="form-input" type="date" id="repeatFrom"/>
-      </div>
-    </div>
     <div class="form-actions">
       <button class="btn-cancel" onclick="closeModal('schedModal')">취소</button>
       <button class="btn-submit" id="schedSubmitBtn" onclick="addSchedule()">추가하기</button>
@@ -255,7 +194,7 @@
   </div>
 </div>
 
-<!-- DETAIL MODAL (view) -->
+<!-- DETAIL MODAL -->
 <div class="modal-overlay" id="detailModal" onclick="closeModal('detailModal')">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -263,157 +202,15 @@
     <div id="detailBody"></div>
     <div class="detail-actions">
       <button class="btn-delete" id="detailDeleteBtn">삭제</button>
-      <button class="btn-cancel" style="flex:1" id="detailEditBtn">수정</button>
       <button class="btn-submit" style="flex:2" onclick="closeModal('detailModal')">닫기</button>
     </div>
   </div>
 </div>
 
-<!-- EDIT SCHEDULE MODAL -->
-<div class="modal-overlay" id="editSchedModal" onclick="closeModal('editSchedModal')">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title">일정 수정</div>
-    <input type="hidden" id="editSchedId"/>
-    <div class="form-group"><label class="form-label">제목</label><input class="form-input" id="editSchedTitle" placeholder="일정 제목"/></div>
-    <div class="form-group"><label class="form-label">날짜</label><input class="form-input" type="date" id="editSchedDate"/></div>
-    <div class="form-group"><label class="form-label">분류</label>
-      <select class="form-select" id="editSchedCategory"></select>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">시작</label>
-        <div style="display:flex;gap:6px">
-          <select class="form-select" id="editSchedStartH" style="flex:1"><option value="">--</option></select>
-          <select class="form-select" id="editSchedStartM" style="flex:0 0 80px"><option value="00">00분</option><option value="30">30분</option></select>
-        </div>
-      </div>
-      <div class="form-group"><label class="form-label">종료</label>
-        <div style="display:flex;gap:6px">
-          <select class="form-select" id="editSchedEndH" style="flex:1"><option value="">--</option></select>
-          <select class="form-select" id="editSchedEndM" style="flex:0 0 80px"><option value="00">00분</option><option value="30">30분</option></select>
-        </div>
-      </div>
-    </div>
-    <div class="form-group"><label class="form-label">메모</label><input class="form-input" id="editSchedMemo" placeholder="선택사항"/></div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeModal('editSchedModal')">취소</button>
-      <button class="btn-submit" id="editSchedSubmitBtn" onclick="saveEditSchedule()">저장하기</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT TODO MODAL -->
-<div class="modal-overlay" id="editTodoModal" onclick="closeModal('editTodoModal')">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title">할 일 수정</div>
-    <input type="hidden" id="editTodoId"/>
-    <div class="form-group"><label class="form-label">내용</label><input class="form-input" id="editTodoTitle" placeholder="할 일 입력"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">날짜</label><input class="form-input" type="date" id="editTodoDate"/></div>
-      <div class="form-group"><label class="form-label">우선순위</label>
-        <select class="form-select" id="editTodoPriority">
-          <option value="high">🔴 높음</option>
-          <option value="mid">🟡 보통</option>
-          <option value="low">⚫ 낮음</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeModal('editTodoModal')">취소</button>
-      <button class="btn-submit" id="editTodoSubmitBtn" onclick="saveEditTodo()">저장하기</button>
-    </div>
-  </div>
-</div>
-
-<!-- CATEGORY MODAL -->
-<div class="modal-overlay" id="catModal" onclick="closeModal('catModal')">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title">분류 관리</div>
-    <div id="catList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input class="form-input" id="newCatName" placeholder="분류 이름" style="flex:1"/>
-      <input type="color" id="newCatColor" value="#a8d8ea" style="width:44px;height:44px;border:none;border-radius:10px;cursor:pointer;background:none;padding:0"/>
-      <button class="btn-submit" style="flex:0 0 auto;padding:12px 16px" onclick="addCategory()">추가</button>
-    </div>
-    <div class="form-actions" style="margin-top:16px">
-      <button class="btn-submit" onclick="closeModal('catModal')">닫기</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzNIQeklJOCqIJamsyv7MzheXZU7a8cK5vft3wONZXQoUiuGkFBnBfbydhlmr0bpdaC/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbys5VNbaKfdqBuLfsCzDxYPQezg32qVLKRgfYHuFefAPHSMiA67gy-QHTM3qxeNOMve/exec';
 
-let schedules = [], todos = [], todoFilter = 'pending', selectedDate = todayStr(), weekOffset = 0, dragSrcId = null;
-let categories = [];
-function getCat(id){return categories.find(c=>c.id===id)||null;}
-
-// ── 캐시 ──────────────────────────────────────────
-const CACHE_KEY = 'dash_cache';
-const CACHE_VER = 'v5';
-function saveCache(){
-  localStorage.setItem(CACHE_KEY, JSON.stringify({
-    schedules, todos, categories, ts: Date.now(), ver: CACHE_VER
-  }));
-}
-function loadCache(){
-  try {
-    const s = localStorage.getItem(CACHE_KEY);
-    if(!s) return false;
-    const c = JSON.parse(s);
-    // 버전 다르면 캐시 무효화
-    if(c.ver !== CACHE_VER) {
-      localStorage.removeItem(CACHE_KEY);
-      return false;
-    }
-    // 날짜/시간 형식 검증 (T가 포함된 ISO 형식이면 무효화)
-    const hasOldDate = (c.schedules||[]).some(s => (s.date&&s.date.includes('T'))||(s.start&&s.start.includes('T'))||(s.end&&s.end.includes('T')));
-    const hasOldTodo = (c.todos||[]).some(t => t.date&&t.date.includes('T'));
-    if(hasOldDate || hasOldTodo) {
-      localStorage.removeItem(CACHE_KEY);
-      return false;
-    }
-    schedules  = c.schedules  || [];
-    todos      = c.todos      || [];
-    categories = c.categories || [];
-    return true;
-  } catch(e){
-    localStorage.removeItem(CACHE_KEY);
-    return false;
-  }
-}
-
-async function loadAll(){
-  const data = await gasGet('all');
-  // categories
-  const catRows = (data.categories||[]).filter(r=>r[0]&&r[0]!=='id');
-  if(catRows.length===0){
-    categories=[
-      {id:'cat_1',name:'회의',color:'#b5d5f5'},
-      {id:'cat_2',name:'약속',color:'#f5c6d0'},
-      {id:'cat_3',name:'작업',color:'#b5e5c8'},
-      {id:'cat_4',name:'개인',color:'#fde9b5'},
-    ];
-    await saveAllCats();
-  } else {
-    categories = catRows.map(r=>({id:r[0]||'',name:r[1]||'',color:r[2]||'#cccccc'}));
-  }
-  // schedules
-  schedules = (data.schedules||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||'', repeatId:r[7]||''
-  }));
-  // todos
-  todos = (data.todos||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'||r[4]===true
-  }));
-}
-
-async function saveAllCats(){
-  const rows=[['id','name','color'],...categories.map(c=>[c.id,c.name,c.color])];
-  await gasPost({sheet:'categories',action:'overwrite',rows});
-}
+let schedules = [], todos = [], todoFilter = 'all', selectedDate = todayStr();
 
 function todayStr() {
   const d = new Date();
@@ -428,79 +225,39 @@ function setSyncStatus(state, msg) {
 }
 
 // ── GAS API ───────────────────────────────────────
-function gasGet(sheet) {
-  return new Promise((resolve, reject) => {
-    const cbName = 'cb_' + Date.now();
-    const script = document.createElement('script');
-    const timeout = setTimeout(() => {
-      delete window[cbName];
-      if (document.body.contains(script)) document.body.removeChild(script);
-      reject(new Error('타임아웃'));
-    }, 10000);
-    window[cbName] = (data) => {
-      clearTimeout(timeout);
-      delete window[cbName];
-      if (document.body.contains(script)) document.body.removeChild(script);
-      resolve(data);
-    };
-    script.src = `${GAS_URL}?sheet=${sheet}&callback=${cbName}`;
-    script.onerror = () => { clearTimeout(timeout); reject(new Error('GET 실패')); };
-    document.body.appendChild(script);
-  });
+async function gasGet(sheet) {
+  const res = await fetch(`${GAS_URL}?sheet=${sheet}`);
+  if (!res.ok) throw new Error('GET 실패');
+  const text = await res.text();
+  return JSON.parse(text);
 }
 
 async function gasPost(body) {
-  await fetch(GAS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: JSON.stringify(body)
-  });
-  return { ok: true };
+  const res = await fetch(GAS_URL, { method:'POST', body: JSON.stringify(body) });
+  if (!res.ok) throw new Error('POST 실패');
+  const text = await res.text();
+  return JSON.parse(text);
 }
 
 // ── LOAD & SYNC ───────────────────────────────────
+async function loadSchedules() {
+  const rows = await gasGet('schedules');
+  schedules = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||''
+  }));
+}
 
-function openCatModal(){
-  renderCatList();
-  document.getElementById('newCatName').value='';
-  document.getElementById('catModal').classList.add('open');
+async function loadTodos() {
+  const rows = await gasGet('todos');
+  todos = rows.filter(r=>r[0]&&r[0]!=='id').map(r=>({
+    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'
+  }));
 }
-function renderCatList(){
-  const list=document.getElementById('catList');
-  list.innerHTML=categories.map(c=>`
-    <div style="display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:10px;padding:10px 14px;border:1px solid var(--border)">
-      <div style="width:20px;height:20px;border-radius:50%;background:${c.color};flex-shrink:0"></div>
-      <span style="flex:1;font-size:14px;font-weight:600;color:var(--text)">${c.name}</span>
-      <button onclick="deleteCat('${c.id}')" style="background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;line-height:1">×</button>
-    </div>`).join('');
-}
-async function addCategory(){
-  const name=document.getElementById('newCatName').value.trim();
-  if(!name)return;
-  const color=document.getElementById('newCatColor').value;
-  const item={id:'cat_'+Date.now(),name,color};
-  categories.push(item);
-  renderCatList();
-  document.getElementById('newCatName').value='';
-  await saveAllCats();
-}
-async function deleteCat(id){
-  categories=categories.filter(c=>c.id!==id);
-  renderCatList();
-  await saveAllCats();
-}
+
 async function syncAll() {
-  // 캐시 즉시 표시
-  if(loadCache()) {
-    renderAll();
-    setSyncStatus('syncing','업데이트 중...');
-  } else {
-    setSyncStatus('syncing','동기화 중...');
-  }
-  // 백그라운드에서 실제 데이터 로드
+  setSyncStatus('syncing','동기화 중...');
   try {
-    await loadAll();
-    saveCache();
+    await Promise.all([loadSchedules(), loadTodos()]);
     renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) {
@@ -509,15 +266,13 @@ async function syncAll() {
 }
 
 async function saveAllSchedules() {
-  const rows = [['id','title','date','start','end','memo','category','repeatId'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||'',s.repeatId||''])];
+  const rows = [['id','title','date','start','end','memo'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo])];
   await gasPost({ sheet:'schedules', action:'overwrite', rows });
-  saveCache();
 }
 
 async function saveAllTodos() {
   const rows = [['id','title','date','priority','done'], ...todos.map(t=>[t.id,t.title,t.date,t.priority,t.done?'TRUE':'FALSE'])];
   await gasPost({ sheet:'todos', action:'overwrite', rows });
-  saveCache();
 }
 
 // ── CLOCK ─────────────────────────────────────────
@@ -532,35 +287,11 @@ function updateClock() {
 setInterval(updateClock,1000); updateClock();
 
 // ── WEEK BAR ──────────────────────────────────────
-function moveWeek(dir) {
-  weekOffset += dir;
-  // 선택된 날짜도 같이 이동
-  const d = new Date(selectedDate);
-  d.setDate(d.getDate() + dir * 7);
-  selectedDate = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  renderAll();
-}
-function goToday() {
-  weekOffset = 0;
-  selectedDate = todayStr();
-  renderAll();
-}
 function renderWeek() {
   const bar = document.getElementById('weekBar');
   bar.innerHTML = '';
-  const today = new Date();
-  const start = new Date(today);
-  start.setDate(today.getDate() - today.getDay() + weekOffset * 7);
-
-  // 주 레이블
-  const endOfWeek = new Date(start);
-  endOfWeek.setDate(start.getDate() + 6);
-  const lbl = weekOffset === 0 ? '이번 주'
-    : weekOffset === -1 ? '지난 주'
-    : weekOffset === 1 ? '다음 주'
-    : `${start.getMonth()+1}/${start.getDate()} ~ ${endOfWeek.getMonth()+1}/${endOfWeek.getDate()}`;
-  document.getElementById('weekLabel').textContent = lbl;
-
+  const today = new Date(), start = new Date(today);
+  start.setDate(today.getDate()-today.getDay());
   ['일','월','화','수','목','금','토'].forEach((lbl,i)=>{
     const d=new Date(start); d.setDate(start.getDate()+i);
     const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -575,8 +306,7 @@ function renderWeek() {
 // ── SCHEDULES ─────────────────────────────────────
 function renderSchedules() {
   const list=document.getElementById('scheduleList'), now=new Date();
-  const timeToMins = t => { if(!t) return 9999; const [h,m]=(t+':0').split(':').map(Number); return h*60+m; };
-  const filtered=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>timeToMins(a.start)-timeToMins(b.start));
+  const filtered=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>(a.start||'').localeCompare(b.start||''));
   document.getElementById('schedCount').textContent=filtered.length;
   if(!filtered.length){list.innerHTML='<div class="empty-state">등록된 일정이 없습니다</div>';return;}
   list.innerHTML=''; let nowInserted=false;
@@ -595,108 +325,30 @@ function renderSchedules() {
     })();
     const el=document.createElement('div');
     el.className=`schedule-item${!s.start?' allday':''}${isOngoing?' ongoing':''}`;
-    const cat=getCat(s.category);const barColor=cat?cat.color:'var(--accent)';const catBadge=cat?`<span style="font-size:10px;font-weight:700;color:${cat.color};background:${cat.color}22;border-radius:4px;padding:1px 6px;margin-left:4px">${cat.name}</span>`:'';const repBadge=s.repeatId?`<span class="repeat-badge">↻ 반복</span>`:'';
-    el.innerHTML=`<div class="color-bar" style="background:${barColor}"></div><div class="item-body"><div class="item-title">${s.title}${catBadge}${repBadge}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;
+    el.innerHTML=`<div class="color-bar"></div><div class="item-body"><div class="item-title">${s.title}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;
     el.onclick=()=>openDetailModal('sched',s.id);
     list.appendChild(el);
   });
 }
 
-function populateHours() {
-  ['schedStartH','schedEndH'].forEach(id=>{
-    const sel=document.getElementById(id);
-    sel.innerHTML='<option value="">--시</option>';
-    for(let h=0;h<24;h++){const v=pad(h);sel.innerHTML+=`<option value="${v}">${v}시</option>`;}
-  });
-}
-function getTime(hId,mId){const h=document.getElementById(hId).value,m=document.getElementById(mId).value;return h?`${h}:${m}`:''}
-function setTime(hId,mId,val){if(!val){document.getElementById(hId).value='';document.getElementById(mId).value='00';return;}const[h,m]=val.split(':');document.getElementById(hId).value=h;document.getElementById(mId).value=m>=30?'30':'00';}
 function openSchedModal() {
   ['schedTitle','schedMemo'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('schedDate').value=selectedDate;
-  populateHours();
-  setTime('schedStartH','schedStartM','');
-  setTime('schedEndH','schedEndM','');
-  const csel=document.getElementById('schedCategory');
-  csel.innerHTML='<option value="">-- 분류 없음</option>'+categories.map(c=>`<option value="${c.id}" style="background:${c.color}">${c.name}</option>`).join('');
-  // reset repeat UI
-  document.getElementById('schedRepeat').checked=false;
-  document.getElementById('repeatUI').style.display='none';
-  document.getElementById('repeatToggleSpan').style.background='var(--border)';
-  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.day-btn').forEach(b=>b.onclick=()=>b.classList.toggle('active'));
-  document.getElementById('repeatFrom').value=selectedDate;
+  document.getElementById('schedStart').value='';
+  document.getElementById('schedEnd').value='';
   const btn=document.getElementById('schedSubmitBtn'); btn.disabled=false; btn.textContent='추가하기';
   document.getElementById('schedModal').classList.add('open');
   setTimeout(()=>document.getElementById('schedTitle').focus(),300);
-}
-
-function toggleRepeatUI() {
-  const on = document.getElementById('schedRepeat').checked;
-  document.getElementById('repeatUI').style.display = on ? 'block' : 'none';
-  const span = document.getElementById('repeatToggleSpan');
-  span.style.background = on ? 'var(--accent)' : 'var(--border)';
-}
-function getRepeatDays() {
-  return [...document.querySelectorAll('.day-btn.active')].map(b=>parseInt(b.dataset.day));
-}
-function getNextDate(fromDate, dayOfWeek) {
-  const d = new Date(fromDate);
-  const cur = d.getDay();
-  let diff = dayOfWeek - cur;
-  if(diff < 0) diff += 7;
-  if(diff === 0) diff = 0;
-  d.setDate(d.getDate() + diff);
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-}
-function generateRepeatDates(fromStr, days) {
-  // 오늘부터 1년치 날짜 생성
-  const from = new Date(fromStr);
-  const until = new Date(from);
-  until.setFullYear(until.getFullYear() + 1);
-  const dates = [];
-  const cur = new Date(from);
-  while(cur <= until) {
-    if(days.includes(cur.getDay())) {
-      dates.push(`${cur.getFullYear()}-${pad(cur.getMonth()+1)}-${pad(cur.getDate())}`);
-    }
-    cur.setDate(cur.getDate()+1);
-  }
-  return dates;
 }
 
 async function addSchedule() {
   const title=document.getElementById('schedTitle').value.trim();
   if(!title){document.getElementById('schedTitle').focus();return;}
   const btn=document.getElementById('schedSubmitBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
-  const isRepeat = document.getElementById('schedRepeat').checked;
-  const start = getTime('schedStartH','schedStartM');
-  const end   = getTime('schedEndH','schedEndM');
-  const cat   = document.getElementById('schedCategory').value;
-  const memo  = document.getElementById('schedMemo').value.trim();
-
+  const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start:document.getElementById('schedStart').value,end:document.getElementById('schedEnd').value,memo:document.getElementById('schedMemo').value.trim()};
   try {
-    if(isRepeat) {
-      const days = getRepeatDays();
-      if(days.length === 0) { alert('반복 요일을 선택해주세요.'); btn.disabled=false; btn.textContent='추가하기'; return; }
-      const fromStr = document.getElementById('repeatFrom').value || todayStr();
-      const repeatId = 'rep_' + Date.now();
-      const dates = generateRepeatDates(fromStr, days);
-      const newItems = dates.map(date => ({
-        id: String(Date.now()) + '_' + date,
-        title, date, start, end, memo, category: cat, repeatId
-      }));
-      // 한번에 배치 저장
-      setSyncStatus('syncing', `반복 일정 ${newItems.length}개 저장 중...`);
-      const batchRows = newItems.map(item=>[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'',item.repeatId||'']);
-      await gasPost({sheet:'schedules',action:'appendBatch',rows:batchRows});
-      newItems.forEach(item=>schedules.push(item));
-    } else {
-      const item={id:String(Date.now()),title,date:document.getElementById('schedDate').value||todayStr(),start,end,category:cat,memo,repeatId:''};
-      await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo,item.category||'','']});
-      schedules.push(item);
-    }
-    saveCache(); closeModal('schedModal'); renderAll();
+    await gasPost({sheet:'schedules',action:'append',row:[item.id,item.title,item.date,item.start,item.end,item.memo]});
+    schedules.push(item); closeModal('schedModal'); renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
 }
@@ -704,64 +356,17 @@ async function addSchedule() {
 // ── TODOS ─────────────────────────────────────────
 function renderTodos() {
   const list=document.getElementById('todoList');
-  let f;
-  if(todoFilter==='pending')     f=todos.filter(t=>!t.done);
-  else if(todoFilter==='today')  f=todos.filter(t=>!t.done&&(t.date===todayStr()||!t.date));
-  else if(todoFilter==='done')   f=todos.filter(t=>t.done);
-  else                           f=[...todos];
-
+  let f=[...todos].sort((a,b)=>a.done-b.done);
+  if(todoFilter==='today') f=f.filter(t=>t.date===todayStr()||!t.date);
+  if(todoFilter==='done')  f=f.filter(t=>t.done);
   document.getElementById('todoCount').textContent=`${todos.filter(t=>!t.done).length}/${todos.length}`;
   if(!f.length){list.innerHTML='<div class="empty-state">할 일이 없습니다 🎉</div>';return;}
   list.innerHTML='';
-  const isDraggable = todoFilter==='pending';
   f.forEach(t=>{
-    const el=document.createElement('div');
-    el.className=`todo-item${t.done?' done':''}`;
-    if(isDraggable) el.setAttribute('draggable','true');
-    el.dataset.id=t.id;
+    const el=document.createElement('div'); el.className=`todo-item${t.done?' done':''}`;
     const pc=t.priority==='high'?'p-high':t.priority==='mid'?'p-mid':'p-low';
-    const handle = isDraggable ? `<div class="drag-handle" title="드래그하여 순서 변경">⠿</div>` : '';
-    el.innerHTML=`${handle}<div class="todo-check" onclick="toggleTodo('${t.id}',event)"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="todo-content"><div class="todo-title">${t.title}</div>${t.date?`<div class="todo-sub">${t.date.replace(/-/g,'.')}</div>`:''}</div><div class="priority-dot ${pc}"></div>`;
-    el.onclick=e=>{if(!e.target.closest('.todo-check')&&!e.target.closest('.drag-handle'))openDetailModal('todo',t.id);};
-
-    // drag events
-    if(isDraggable) {
-      el.addEventListener('dragstart', e=>{
-        dragSrcId=t.id;
-        el.classList.add('dragging');
-        e.dataTransfer.effectAllowed='move';
-      });
-      el.addEventListener('dragend', ()=>{
-        el.classList.remove('dragging');
-        document.querySelectorAll('.todo-item').forEach(i=>i.classList.remove('drag-over'));
-      });
-      el.addEventListener('dragover', e=>{
-        e.preventDefault();
-        e.dataTransfer.dropEffect='move';
-        document.querySelectorAll('.todo-item').forEach(i=>i.classList.remove('drag-over'));
-        el.classList.add('drag-over');
-      });
-      el.addEventListener('drop', e=>{
-        e.preventDefault();
-        if(dragSrcId===t.id) return;
-        // reorder in todos array (pending only)
-        const pending = todos.filter(t=>!t.done);
-        const done    = todos.filter(t=>t.done);
-        const srcIdx  = pending.findIndex(t=>t.id===dragSrcId);
-        const dstIdx  = pending.findIndex(t=>t.id===dragSrcId===t.id?true:t.id===pending[pending.findIndex(x=>x.id===t.id)]?.id);
-        // simpler reorder
-        const fromIdx = pending.findIndex(x=>x.id===dragSrcId);
-        const toIdx   = pending.findIndex(x=>x.id===t.id);
-        if(fromIdx<0||toIdx<0) return;
-        const [moved] = pending.splice(fromIdx,1);
-        pending.splice(toIdx,0,moved);
-        todos = [...pending,...done];
-        saveCache();
-        renderTodos();
-        // save to sheets async
-        saveAllTodos().then(()=>setSyncStatus('ok',`마지막 동기화 ${timeNow()}`)).catch(()=>setSyncStatus('error','저장 실패'));
-      });
-    }
+    el.innerHTML=`<div class="todo-check" onclick="toggleTodo('${t.id}',event)"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="todo-content"><div class="todo-title">${t.title}</div>${t.date?`<div class="todo-sub">${t.date.replace(/-/g,'.')}</div>`:''}</div><div class="priority-dot ${pc}"></div>`;
+    el.onclick=e=>{if(!e.target.closest('.todo-check'))openDetailModal('todo',t.id);};
     list.appendChild(el);
   });
 }
@@ -796,7 +401,7 @@ async function addTodo() {
   const item={id:String(Date.now()),title,date:document.getElementById('todoDate').value,priority:document.getElementById('todoPriority').value,done:false};
   try {
     await gasPost({sheet:'todos',action:'append',row:[item.id,item.title,item.date,item.priority,'FALSE']});
-    todos.unshift(item); saveCache(); closeModal('todoModal'); renderTodos();
+    todos.unshift(item); closeModal('todoModal'); renderTodos();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) { setSyncStatus('error','저장 실패'); btn.disabled=false; btn.textContent='추가하기'; }
 }
@@ -806,123 +411,25 @@ function openDetailModal(type,id) {
   let item,bodyHtml;
   if(type==='sched') {
     item=schedules.find(s=>s.id===id);
-    const cat=getCat(item.category);
-    const catBadge=cat?`<span style="background:${cat.color}33;color:${cat.color};font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px">${cat.name}</span>`:'';
-    bodyHtml=`
-      <div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>
-      ${item.start?`<div class="detail-row"><span class="dr-label">시간</span><span class="dr-val">${item.start}${item.end?' ~ '+item.end:''}</span></div>`:''}
-      ${cat?`<div class="detail-row"><span class="dr-label">분류</span><span class="dr-val">${catBadge}</span></div>`:''}
-      ${item.memo?`<div class="detail-row"><span class="dr-label">메모</span><span class="dr-val">${item.memo}</span></div>`:''}`;
+    bodyHtml=`<div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>${item.start?`<div class="detail-row"><span class="dr-label">시간</span><span class="dr-val">${item.start}${item.end?' ~ '+item.end:''}</span></div>`:''}${item.memo?`<div class="detail-row"><span class="dr-label">메모</span><span class="dr-val">${item.memo}</span></div>`:''}`;
     document.getElementById('detailDeleteBtn').onclick=async()=>{
-      if(!confirm('삭제할까요?')) return;
       schedules=schedules.filter(s=>s.id!==id); closeModal('detailModal'); renderAll();
       try{setSyncStatus('syncing','저장 중...');await saveAllSchedules();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
       catch(e){setSyncStatus('error','저장 실패');}
     };
-    document.getElementById('detailEditBtn').onclick=()=>{ closeModal('detailModal'); openEditSchedModal(id); };
   } else {
     item=todos.find(t=>t.id===id);
     const pl=item.priority==='high'?'🔴 높음':item.priority==='mid'?'🟡 보통':'⚫ 낮음';
-    bodyHtml=`
-      <div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div>
-      <div class="detail-row"><span class="dr-label">우선순위</span><span class="dr-val">${pl}</span></div>
-      <div class="detail-row"><span class="dr-label">상태</span><span class="dr-val">${item.done?'✅ 완료':'⏳ 진행중'}</span></div>`;
+    bodyHtml=`<div class="detail-row"><span class="dr-label">날짜</span><span class="dr-val">${item.date.replace(/-/g,'.')}</span></div><div class="detail-row"><span class="dr-label">우선순위</span><span class="dr-val">${pl}</span></div><div class="detail-row"><span class="dr-label">상태</span><span class="dr-val">${item.done?'✅ 완료':'⏳ 진행중'}</span></div>`;
     document.getElementById('detailDeleteBtn').onclick=async()=>{
-      if(!confirm('삭제할까요?')) return;
       todos=todos.filter(t=>t.id!==id); closeModal('detailModal'); renderTodos();
       try{setSyncStatus('syncing','저장 중...');await saveAllTodos();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
       catch(e){setSyncStatus('error','저장 실패');}
     };
-    document.getElementById('detailEditBtn').onclick=()=>{ closeModal('detailModal'); openEditTodoModal(id); };
   }
   document.getElementById('detailTitle').textContent=item.title;
   document.getElementById('detailBody').innerHTML=bodyHtml;
   document.getElementById('detailModal').classList.add('open');
-}
-
-// ── EDIT SCHEDULE ──────────────────────────────────
-function openEditSchedModal(id) {
-  const s = schedules.find(s=>s.id===id);
-  if(!s) return;
-  document.getElementById('editSchedId').value = id;
-  document.getElementById('editSchedTitle').value = s.title;
-  document.getElementById('editSchedDate').value = s.date;
-  document.getElementById('editSchedMemo').value = s.memo||'';
-  // populate hours
-  ['editSchedStartH','editSchedEndH'].forEach(hid=>{
-    const sel=document.getElementById(hid);
-    sel.innerHTML='<option value="">--시</option>';
-    for(let h=0;h<24;h++){const v=pad(h);sel.innerHTML+=`<option value="${v}">${v}시</option>`;}
-  });
-  setTime('editSchedStartH','editSchedStartM', s.start||'');
-  setTime('editSchedEndH','editSchedEndM', s.end||'');
-  // category
-  const csel=document.getElementById('editSchedCategory');
-  csel.innerHTML='<option value="">-- 분류 없음</option>'+categories.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  csel.value = s.category||'';
-  const btn=document.getElementById('editSchedSubmitBtn'); btn.disabled=false; btn.textContent='저장하기';
-  document.getElementById('editSchedModal').classList.add('open');
-}
-
-async function saveEditSchedule() {
-  const id = document.getElementById('editSchedId').value;
-  const title = document.getElementById('editSchedTitle').value.trim();
-  if(!title) { document.getElementById('editSchedTitle').focus(); return; }
-  const btn = document.getElementById('editSchedSubmitBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
-  const s = schedules.find(s=>s.id===id);
-  if(!s) return;
-  s.title    = title;
-  s.date     = document.getElementById('editSchedDate').value;
-  s.start    = getTime('editSchedStartH','editSchedStartM');
-  s.end      = getTime('editSchedEndH','editSchedEndM');
-  s.memo     = document.getElementById('editSchedMemo').value.trim();
-  s.category = document.getElementById('editSchedCategory').value;
-  try {
-    setSyncStatus('syncing','저장 중...');
-    await saveAllSchedules();
-    saveCache();
-    closeModal('editSchedModal'); renderAll();
-    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
-  } catch(e) {
-    setSyncStatus('error','저장 실패');
-    btn.disabled=false; btn.textContent='저장하기';
-  }
-}
-
-// ── EDIT TODO ─────────────────────────────────────
-function openEditTodoModal(id) {
-  const t = todos.find(t=>t.id===id);
-  if(!t) return;
-  document.getElementById('editTodoId').value = id;
-  document.getElementById('editTodoTitle').value = t.title;
-  document.getElementById('editTodoDate').value = t.date||'';
-  document.getElementById('editTodoPriority').value = t.priority||'mid';
-  const btn=document.getElementById('editTodoSubmitBtn'); btn.disabled=false; btn.textContent='저장하기';
-  document.getElementById('editTodoModal').classList.add('open');
-}
-
-async function saveEditTodo() {
-  const id = document.getElementById('editTodoId').value;
-  const title = document.getElementById('editTodoTitle').value.trim();
-  if(!title) { document.getElementById('editTodoTitle').focus(); return; }
-  const btn = document.getElementById('editTodoSubmitBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
-  const t = todos.find(t=>t.id===id);
-  if(!t) return;
-  t.title    = title;
-  t.date     = document.getElementById('editTodoDate').value;
-  t.priority = document.getElementById('editTodoPriority').value;
-  try {
-    setSyncStatus('syncing','저장 중...');
-    await saveAllTodos();
-    saveCache();
-    closeModal('editTodoModal'); renderTodos();
-    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
-  } catch(e) {
-    setSyncStatus('error','저장 실패');
-    btn.disabled=false; btn.textContent='저장하기';
-  }
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
