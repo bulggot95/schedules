@@ -705,10 +705,18 @@ async function addSchedule() {
 function renderTodos() {
   const list=document.getElementById('todoList');
   let f;
-  if(todoFilter==='pending')     f=todos.filter(t=>!t.done);
-  else if(todoFilter==='today')  f=todos.filter(t=>!t.done&&(t.date===todayStr()||!t.date));
-  else if(todoFilter==='done')   f=todos.filter(t=>t.done);
-  else                           f=[...todos];
+  const pOrder = {'high':0,'mid':1,'low':2};
+  const todoSort = (a,b) => {
+    // 1순위: 우선순위 (high > mid > low)
+    const pd = (pOrder[a.priority]??1) - (pOrder[b.priority]??1);
+    if(pd !== 0) return pd;
+    // 2순위: 등록일 최신순 (id가 timestamp 기반)
+    return Number(b.id) - Number(a.id);
+  };
+  if(todoFilter==='pending')     f=todos.filter(t=>!t.done).sort(todoSort);
+  else if(todoFilter==='today')  f=todos.filter(t=>!t.done&&(t.date===todayStr()||!t.date)).sort(todoSort);
+  else if(todoFilter==='done')   f=todos.filter(t=>t.done).sort((a,b)=>Number(b.id)-Number(a.id));
+  else                           f=[...todos].sort(todoSort);
 
   document.getElementById('todoCount').textContent=`${todos.filter(t=>!t.done).length}/${todos.length}`;
   if(!f.length){list.innerHTML='<div class="empty-state">할 일이 없습니다 🎉</div>';return;}
