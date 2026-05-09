@@ -400,14 +400,24 @@ async function loadAll(){
   } else {
     categories = catRows.map(r=>({id:r[0]||'',name:r[1]||'',color:r[2]||'#cccccc'}));
   }
-  // schedules
-  schedules = (data.schedules||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||'', repeatId:r[7]||''
-  }));
-  // todos
-  todos = (data.todos||[]).filter(r=>r[0]&&r[0]!=='id').map(r=>({
-    id:r[0]||'', title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'||r[4]===true
-  }));
+  // schedules (중복 제거)
+  const schedMap = new Map();
+  (data.schedules||[]).filter(r=>r[0]&&r[0]!=='id').forEach(r=>{
+    const id = r[0]||'';
+    if(!schedMap.has(id)) {
+      schedMap.set(id, {id, title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||'', repeatId:r[7]||''});
+    }
+  });
+  schedules = [...schedMap.values()];
+  // todos (중복 제거)
+  const todoMap = new Map();
+  (data.todos||[]).filter(r=>r[0]&&r[0]!=='id').forEach(r=>{
+    const id = r[0]||'';
+    if(!todoMap.has(id)) {
+      todoMap.set(id, {id, title:r[1]||'', date:r[2]||'', priority:r[3]||'mid', done:r[4]==='TRUE'||r[4]===true});
+    }
+  });
+  todos = [...todoMap.values()];
 }
 
 async function saveAllCats(){
@@ -602,21 +612,41 @@ function renderSchedules() {
   });
 }
 
-function populateHours() {
-  ['schedStartH','schedEndH'].forEach(id=>{
+function populateHours(ids, defaultH) {
+  (ids||['schedStartH','schedEndH']).forEach(id=>{
     const sel=document.getElementById(id);
     sel.innerHTML='<option value="">--시</option>';
     for(let h=0;h<24;h++){const v=pad(h);sel.innerHTML+=`<option value="${v}">${v}시</option>`;}
+    if(defaultH!==undefined) sel.value=pad(defaultH);
   });
 }
 function getTime(hId,mId){const h=document.getElementById(hId).value,m=document.getElementById(mId).value;return h?`${h}:${m}`:''}
-function setTime(hId,mId,val){if(!val){document.getElementById(hId).value='';document.getElementById(mId).value='00';return;}const[h,m]=val.split(':');document.getElementById(hId).value=h;document.getElementById(mId).value=m>=30?'30':'00';}
+function setTime(hId,mId,val){if(!val){document.getElementById(hId).value='';document.getElementById(mId).value='00';return;}const[h,m]=val.split(':');document.getElementById(hId).value=h;document.getElementById(mId).value=Number(m)>=30?'30':'00';}
+
+// 시작시간 변경 시 종료시간 자동 1시간 뒤 설정
+function onStartHourChange() {
+  const startH = document.getElementById('schedStartH').value;
+  const startM = document.getElementById('schedStartM').value;
+  if(!startH) return;
+  const endH = (parseInt(startH)+1) % 24;
+  document.getElementById('schedEndH').value = pad(endH);
+  document.getElementById('schedEndM').value = startM;
+}
+function onStartMinChange() {
+  const startH = document.getElementById('schedStartH').value;
+  if(!startH) return;
+  onStartHourChange();
+}
 function openSchedModal() {
   ['schedTitle','schedMemo'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('schedDate').value=selectedDate;
-  populateHours();
-  setTime('schedStartH','schedStartM','');
-  setTime('schedEndH','schedEndM','');
+  populateHours(['schedStartH','schedEndH'], 8);
+  document.getElementById('schedStartM').value='00';
+  document.getElementById('schedEndH').value=pad(9);
+  document.getElementById('schedEndM').value='00';
+  // 시작시간 변경 시 종료시간 자동 설정
+  document.getElementById('schedStartH').onchange = onStartHourChange;
+  document.getElementById('schedStartM').onchange = onStartMinChange;
   const csel=document.getElementById('schedCategory');
   csel.innerHTML='<option value="">-- 분류 없음</option>'+categories.map(c=>`<option value="${c.id}" style="background:${c.color}">${c.name}</option>`).join('');
   // reset repeat UI
@@ -925,13 +955,17 @@ function openEditSchedModal(id) {
   document.getElementById('editSchedDate').value = s.date;
   document.getElementById('editSchedMemo').value = s.memo||'';
   // populate hours
-  ['editSchedStartH','editSchedEndH'].forEach(hid=>{
-    const sel=document.getElementById(hid);
-    sel.innerHTML='<option value="">--시</option>';
-    for(let h=0;h<24;h++){const v=pad(h);sel.innerHTML+=`<option value="${v}">${v}시</option>`;}
-  });
+  populateHours(['editSchedStartH','editSchedEndH']);
   setTime('editSchedStartH','editSchedStartM', s.start||'');
   setTime('editSchedEndH','editSchedEndM', s.end||'');
+  // 수정 모달에서도 시작시간 변경 시 자동 설정
+  document.getElementById('editSchedStartH').onchange = ()=>{
+    const h=document.getElementById('editSchedStartH').value;
+    const m=document.getElementById('editSchedStartM').value;
+    if(!h) return;
+    document.getElementById('editSchedEndH').value=pad((parseInt(h)+1)%24);
+    document.getElementById('editSchedEndM').value=m;
+  };
   // category
   const csel=document.getElementById('editSchedCategory');
   csel.innerHTML='<option value="">-- 분류 없음</option>'+categories.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
