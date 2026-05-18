@@ -732,6 +732,19 @@ async function addSchedule() {
 }
 
 // ── TODOS ─────────────────────────────────────────
+function getDayDiff(dateStr) {
+  if(!dateStr) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const target = new Date(dateStr); target.setHours(0,0,0,0);
+  return Math.floor((today - target) / (1000*60*60*24));
+}
+function dayDiffLabel(diff) {
+  if(diff === null) return '';
+  if(diff === 0) return {text:'+0일', color:'#34d399'};
+  if(diff <= 3)  return {text:`+${diff}일`, color:'#fbbf24'};
+  if(diff <= 7)  return {text:`+${diff}일`, color:'#f87171'};
+  return {text:`+${diff}일`, color:'#a78bfa'};
+}
 function renderTodos() {
   const list=document.getElementById('todoList');
   let f;
@@ -759,7 +772,7 @@ function renderTodos() {
     el.dataset.id=t.id;
     const pc=t.priority==='high'?'p-high':t.priority==='mid'?'p-mid':'p-low';
     const handle = isDraggable ? `<div class="drag-handle" title="드래그하여 순서 변경">⠿</div>` : '';
-    el.innerHTML=`${handle}<div class="todo-check" onclick="toggleTodo('${t.id}',event)"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="todo-content"><div class="todo-title">${t.title}</div>${t.date?`<div class="todo-sub">${t.date.replace(/-/g,'.')}</div>`:''}</div><div class="priority-dot ${pc}"></div>`;
+    el.innerHTML=`${handle}<div class="todo-check" onclick="toggleTodo('${t.id}',event)"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="todo-content"><div class="todo-title">${t.title}</div>${t.date?`<div class="todo-sub" style="display:flex;align-items:center;gap:6px">${t.date.replace(/-/g,'.')}${(()=>{const d=getDayDiff(t.date);const l=dayDiffLabel(d);return l?`<span style="font-size:10px;font-weight:700;color:${l.color};background:${l.color}22;border-radius:4px;padding:1px 5px">${l.text}</span>`:'';})()} </div>`:''}</div><div class="priority-dot ${pc}"></div>`;
     el.onclick=e=>{if(!e.target.closest('.todo-check')&&!e.target.closest('.drag-handle'))openDetailModal('todo',t.id);};
 
     // touch + mouse drag (works on Chrome & Edge mobile)
