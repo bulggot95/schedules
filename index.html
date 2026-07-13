@@ -380,7 +380,7 @@
 </div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwKvkuqD7fhVqdFdXzGLvUZvXQKje-LZxS4nssw9uIFVDcSGAQR3Kb6HN2AJWAwH9Wj/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwG-b1JiLmAmDqz_tZmmETF561cL0K9tHhj9w5NsnQUE2cqmbug0eogzidJqZpSS60Y/exec';
 
 let schedules = [], todos = [], todoFilter = 'pending', selectedDate = todayStr(), weekOffset = 0, dragSrcId = null;
 let categories = [];
@@ -559,10 +559,28 @@ async function saveAllSchedules() {
   await gasPost({ sheet:'schedules', action:'overwrite', rows });
   saveCache();
 }
+async function updateSchedule(s) {
+  await gasPost({ sheet:'schedules', action:'update', id:s.id,
+    row:[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||'',s.repeatId||''] });
+  saveCache();
+}
+async function deleteScheduleRow(id) {
+  await gasPost({ sheet:'schedules', action:'deleteRow', id });
+  saveCache();
+}
 
 async function saveAllTodos() {
   const rows = [['id','title','date','priority','done'], ...todos.map(t=>[t.id,t.title,t.date,t.priority,t.done?'TRUE':'FALSE'])];
   await gasPost({ sheet:'todos', action:'overwrite', rows });
+  saveCache();
+}
+async function updateTodo(t) {
+  await gasPost({ sheet:'todos', action:'update', id:t.id,
+    row:[t.id,t.title,t.date,t.priority,t.done?'TRUE':'FALSE'] });
+  saveCache();
+}
+async function deleteTodoRow(id) {
+  await gasPost({ sheet:'todos', action:'deleteRow', id });
   saveCache();
 }
 
@@ -1016,7 +1034,7 @@ async function toggleTodo(id,e) {
   e.stopPropagation();
   const t=todos.find(t=>t.id===id); if(!t)return;
   t.done=!t.done; renderTodos();
-  try { setSyncStatus('syncing','저장 중...'); await saveAllTodos(); setSyncStatus('ok',`마지막 동기화 ${timeNow()}`); }
+  try { setSyncStatus('syncing','저장 중...'); await updateTodo(t); setSyncStatus('ok',`마지막 동기화 ${timeNow()}`); }
   catch(err) { setSyncStatus('error','저장 실패'); }
 }
 
@@ -1056,7 +1074,7 @@ function openDetailModal(type,id) {
     document.getElementById('detailDeleteBtn').onclick=async()=>{
       if(!confirm('삭제할까요?')) return;
       schedules=schedules.filter(s=>s.id!==id); closeModal('detailModal'); renderAll();
-      try{setSyncStatus('syncing','저장 중...');await saveAllSchedules();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
+      try{setSyncStatus('syncing','저장 중...');await deleteScheduleRow(id);setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
       catch(e){setSyncStatus('error','저장 실패');}
     };
     document.getElementById('detailEditBtn').onclick=()=>{ closeModal('detailModal'); openEditSchedModal(id); };
@@ -1070,7 +1088,7 @@ function openDetailModal(type,id) {
     document.getElementById('detailDeleteBtn').onclick=async()=>{
       if(!confirm('삭제할까요?')) return;
       todos=todos.filter(t=>t.id!==id); closeModal('detailModal'); renderTodos();
-      try{setSyncStatus('syncing','저장 중...');await saveAllTodos();setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
+      try{setSyncStatus('syncing','저장 중...');await deleteTodoRow(id);setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);}
       catch(e){setSyncStatus('error','저장 실패');}
     };
     document.getElementById('detailEditBtn').onclick=()=>{ closeModal('detailModal'); openEditTodoModal(id); };
@@ -1124,8 +1142,7 @@ async function saveEditSchedule() {
   s.category = document.getElementById('editSchedCategory').value;
   try {
     setSyncStatus('syncing','저장 중...');
-    await saveAllSchedules();
-    saveCache();
+    await updateSchedule(s);
     closeModal('editSchedModal'); renderAll();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) {
@@ -1159,8 +1176,7 @@ async function saveEditTodo() {
   t.priority = document.getElementById('editTodoPriority').value;
   try {
     setSyncStatus('syncing','저장 중...');
-    await saveAllTodos();
-    saveCache();
+    await updateTodo(t);
     closeModal('editTodoModal'); renderTodos();
     setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
   } catch(e) {
