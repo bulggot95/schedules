@@ -66,6 +66,12 @@
   .schedule-item.allday .time-start { font-size: 11px; color: var(--text2); background: var(--surface2); border-radius: 6px; padding: 2px 6px; }
   .schedule-item.ongoing .color-bar { background: var(--green); }
   .schedule-item.ongoing .item-title { color: var(--green); }
+  .schedule-item.done-sched { opacity: 0.5; }
+  .schedule-item.done-sched .item-title { text-decoration: line-through; color: var(--text3); }
+  .sched-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; background: transparent; margin: auto 10px; }
+  .sched-check.checked { background: var(--green); border-color: var(--green); }
+  .sched-check svg { display: none; }
+  .sched-check.checked svg { display: block; }
   .now-line { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
   .now-line .now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex-shrink: 0; box-shadow: 0 0 0 3px rgba(248,113,113,0.25); }
   .now-line .now-label { font-size: 11px; font-weight: 700; color: var(--red); }
@@ -297,10 +303,14 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="detailTitle"></div>
     <div id="detailBody"></div>
-    <div class="detail-actions">
-      <button class="btn-delete" id="detailDeleteBtn">삭제</button>
+    <div class="detail-actions" style="flex-wrap:wrap;gap:8px">
+      <button class="btn-delete" id="detailDeleteBtn" style="flex:1">삭제</button>
       <button class="btn-cancel" style="flex:1" id="detailEditBtn">수정</button>
       <button class="btn-submit" style="flex:2" onclick="closeModal('detailModal')">닫기</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn-cancel" style="flex:1;font-size:13px" id="detailCopyBtn">📋 복사</button>
+      <button class="btn-cancel" style="flex:1;font-size:13px" id="detailMoveBtn">📅 이동</button>
     </div>
   </div>
 </div>
@@ -379,8 +389,25 @@
   </div>
 </div>
 
+<!-- COPY/MOVE MODAL -->
+<div class="modal-overlay" id="copyMoveModal" onclick="closeModal('copyMoveModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="copyMoveTitle">일정 복사</div>
+    <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:14px;font-weight:600;color:var(--text2)" id="copyMoveSchedName"></div>
+    <div class="form-group">
+      <label class="form-label">대상 날짜</label>
+      <input class="form-input" type="date" id="copyMoveDate"/>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal('copyMoveModal')">취소</button>
+      <button class="btn-submit" id="copyMoveBtn" onclick="executeCopyMove()">확인</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxBHGrFFvhrwK6Wk9TaJxbUl0IuFsrPqJZO1F_MVzqB35jEI9mxR8fyOIVLVO_3VUJN/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwG-b1JiLmAmDqz_tZmmETF561cL0K9tHhj9w5NsnQUE2cqmbug0eogzidJqZpSS60Y/exec';
 
 let schedules = [], todos = [], todoFilter = 'pending', selectedDate = todayStr(), weekOffset = 0, dragSrcId = null;
 let categories = [];
@@ -388,7 +415,7 @@ function getCat(id){return categories.find(c=>c.id===id)||null;}
 
 // ── 캐시 ──────────────────────────────────────────
 const CACHE_KEY = 'dash_cache';
-const CACHE_VER = 'v6';
+const CACHE_VER = 'v7';
 function saveCache(){
   localStorage.setItem(CACHE_KEY, JSON.stringify({
     schedules, todos, categories, ts: Date.now(), ver: CACHE_VER
@@ -441,7 +468,7 @@ async function loadAll(){
   (data.schedules||[]).filter(r=>r[0]&&r[0]!=='id').forEach(r=>{
     const id = r[0]||'';
     if(!schedMap.has(id)) {
-      schedMap.set(id, {id, title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||'', repeatId:r[7]||''});
+      schedMap.set(id, {id, title:r[1]||'', date:r[2]||'', start:r[3]||'', end:r[4]||'', memo:r[5]||'', category:r[6]||'', repeatId:r[7]||'', done:r[8]==='TRUE'});
     }
   });
   schedules = [...schedMap.values()];
@@ -555,13 +582,13 @@ async function syncAll() {
 }
 
 async function saveAllSchedules() {
-  const rows = [['id','title','date','start','end','memo','category','repeatId'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||'',s.repeatId||''])];
+  const rows = [['id','title','date','start','end','memo','category','repeatId','done'], ...schedules.map(s=>[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||'',s.repeatId||'',s.done?'TRUE':'FALSE'])];
   await gasPost({ sheet:'schedules', action:'overwrite', rows });
   saveCache();
 }
 async function updateSchedule(s) {
   await gasPost({ sheet:'schedules', action:'update', id:s.id,
-    row:[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||'',s.repeatId||''] });
+    row:[s.id,s.title,s.date,s.start,s.end,s.memo,s.category||'',s.repeatId||'',s.done?'TRUE':'FALSE'] });
   saveCache();
 }
 async function deleteScheduleRow(id) {
@@ -658,10 +685,22 @@ function renderSchedules() {
       return nm>=sh*60+sm&&nm<=eh*60+em;
     })();
     const el=document.createElement('div');
-    el.className=`schedule-item${!s.start?' allday':''}${isOngoing?' ongoing':''}`;
+    el.className=`schedule-item${!s.start?' allday':''}${isOngoing?' ongoing':''}${s.done?' done-sched':''}`;
     const cat=getCat(s.category);const barColor=cat?cat.color:'var(--accent)';const catBadge=cat?`<span style="font-size:10px;font-weight:700;color:${cat.color};background:${cat.color}22;border-radius:4px;padding:1px 6px;margin-left:4px">${cat.name}</span>`:'';const repBadge=s.repeatId?`<span class="repeat-badge">↻ 반복</span>`:'';
-    el.innerHTML=`<div class="color-bar" style="background:${barColor}"></div><div class="item-body"><div class="item-title">${s.title}${catBadge}${repBadge}</div>${s.memo?`<div class="item-meta">${s.memo}</div>`:''}</div><div class="item-time"><span class="time-start">${s.start||'종일'}</span>${s.end?`<span class="time-end">~ ${s.end}</span>`:''}</div>`;
-    el.onclick=()=>openDetailModal('sched',s.id);
+    el.innerHTML=`
+      <div class="color-bar" style="background:${barColor}"></div>
+      <div class="sched-check${s.done?' checked':''}" onclick="toggleSchedDone('${s.id}',event)">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="item-body">
+        <div class="item-title">${s.title}${catBadge}${repBadge}</div>
+        ${s.memo?`<div class="item-meta">${s.memo}</div>`:''}
+      </div>
+      <div class="item-time">
+        <span class="time-start">${s.start||'종일'}</span>
+        ${s.end?`<span class="time-end">~ ${s.end}</span>`:''}
+      </div>`;
+    el.onclick=e=>{if(!e.target.closest('.sched-check'))openDetailModal('sched',s.id);};
     list.appendChild(el);
   });
 }
@@ -1078,6 +1117,8 @@ function openDetailModal(type,id) {
       catch(e){setSyncStatus('error','저장 실패');}
     };
     document.getElementById('detailEditBtn').onclick=()=>{ closeModal('detailModal'); openEditSchedModal(id); };
+    document.getElementById('detailCopyBtn').onclick=()=>openCopyMoveModal(id,'copy');
+    document.getElementById('detailMoveBtn').onclick=()=>openCopyMoveModal(id,'move');
   } else {
     item=todos.find(t=>t.id===id);
     const pl=item.priority==='high'?'🔴 높음':item.priority==='mid'?'🟡 보통':'⚫ 낮음';
@@ -1186,6 +1227,64 @@ async function saveEditTodo() {
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+// ── 일정 완료 토글 ────────────────────────────────
+async function toggleSchedDone(id, e) {
+  e.stopPropagation();
+  const s = schedules.find(s=>s.id===id);
+  if(!s) return;
+  s.done = !s.done;
+  renderSchedules();
+  try {
+    setSyncStatus('syncing','저장 중...');
+    await updateSchedule(s);
+    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
+  } catch(err) { setSyncStatus('error','저장 실패'); }
+}
+
+// ── 일정 복사/이동 ────────────────────────────────
+let _copyMoveId = null, _copyMoveType = null;
+
+function openCopyMoveModal(id, type) {
+  _copyMoveId = id;
+  _copyMoveType = type;
+  const s = schedules.find(s=>s.id===id);
+  if(!s) return;
+  document.getElementById('copyMoveTitle').textContent = type==='copy' ? '일정 복사' : '일정 이동';
+  document.getElementById('copyMoveSchedName').textContent = s.title;
+  document.getElementById('copyMoveDate').value = todayStr();
+  closeModal('detailModal');
+  document.getElementById('copyMoveModal').classList.add('open');
+}
+
+async function executeCopyMove() {
+  const s = schedules.find(s=>s.id===_copyMoveId);
+  if(!s) return;
+  const newDate = document.getElementById('copyMoveDate').value;
+  if(!newDate) { alert('날짜를 선택해주세요.'); return; }
+  const btn = document.getElementById('copyMoveBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+  try {
+    if(_copyMoveType === 'copy') {
+      // 복사: 새 id로 추가
+      const newItem = {...s, id:String(Date.now()), date:newDate, repeatId:'', done:false};
+      await gasPost({sheet:'schedules', action:'append',
+        row:[newItem.id,newItem.title,newItem.date,newItem.start,newItem.end,newItem.memo,newItem.category||'','','FALSE']});
+      schedules.push(newItem);
+    } else {
+      // 이동: 날짜만 변경
+      s.date = newDate;
+      await updateSchedule(s);
+    }
+    saveCache();
+    closeModal('copyMoveModal');
+    renderAll();
+    setSyncStatus('ok',`마지막 동기화 ${timeNow()}`);
+  } catch(err) {
+    setSyncStatus('error','저장 실패');
+    btn.disabled=false; btn.textContent='확인';
+  }
+}
+
 function renderAll() { renderWeek(); renderSchedules(); renderTodos(); }
 
 syncAll();
